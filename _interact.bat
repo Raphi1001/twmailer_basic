@@ -1,1 +1,0 @@
-docker exec -it cs-sample-instance bash
