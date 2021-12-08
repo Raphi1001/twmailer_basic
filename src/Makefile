@@ -18,24 +18,36 @@ CC=g++
 #           of object code produced by the compiler or that of libraries supplied with it. 
 #           These are HP-UX specific flags.
 #############################################################################################
-CFLAGS=-g -Wall -Wextra -O -std=c++2a -I /usr/local/include/gtest/ -pthread
-GTEST=/usr/local/lib/libgtest.a
+
+# $^ dependencies, $@: target, % pattern
+
+CFLAGS=-g -Wall -Wextra -O -std=c++17 -pthread
+
+OBJDIR= obj
+BINDIR= bin
+
+SERVER = $(addprefix $(OBJDIR)/, ServerClass.o)
+CLIENT = $(addprefix $(OBJDIR)/, ClientClass.o)
 
 rebuild: clean all
-all: ./bin/server ./bin/client
+
+all: $(BINDIR)/client $(BINDIR)/server
 
 clean:
 	clear
-	rm -f bin/* obj/*
+	rm -f $(BINDIR)/* $(OBJDIR)/*
 
-./obj/myclient.o: myclient.cpp
-	${CC} ${CFLAGS} -o obj/myclient.o myclient.cpp -c
+$(OBJDIR)/%.o: %.cpp 
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-./obj/myserver.o: myserver.cpp
-	${CC} ${CFLAGS} -o obj/myserver.o myserver.cpp -c 
+$(OBJDIR)/%.o: Server/%.cpp
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-./bin/server: ./obj/myserver.o
-	${CC} ${CFLAGS} -o bin/server obj/myserver.o
+$(OBJDIR)/%.o: Client/%.cpp
+	$(CC) $(CFLAGS) -c $^ -o $@
 
-./bin/client: ./obj/myclient.o
-	${CC} ${CFLAGS} -o bin/client obj/myclient.o
+$(BINDIR)/server: $(OBJDIR)/server.o $(SERVER)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BINDIR)/client: $(OBJDIR)/client.o $(CLIENT)
+	$(CC) $(CFLAGS) $^ -o $@
