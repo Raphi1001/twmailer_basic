@@ -1,5 +1,7 @@
 #include "server.h"
 
+#include "../shared/message.h"
+
 /// Helperfuncs
 
 void Server::print_usage()
@@ -70,6 +72,12 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
+    message test;
+    if (test.setSender("hllo123"))
+        std::cout << "passt" << std::endl;
+    else
+        std::cout << "passt nicht" << std::endl;
+
     while (connectionCode == 0)
     {
         if (listen(socket_fd, 10) == -1)

@@ -1,7 +1,8 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <string>
+#include <iostream>
 
 class message
 {
@@ -10,11 +11,18 @@ private:
     std::string reciever;
     std::string subject;
     std::string messageContent;
+    int messageNumber;
+
+    bool isDigitLetterOnly(std::string word);
+    bool checkUser(std::string user);
 
 public:
-    bool message::setSender(std::string sender);
-    bool message::setReciever(std::string sender);
+    bool setSender(std::string sender);
+    bool setReciever(std::string reciever);
+    bool setSubject(std::string subject);
+    bool setMessageContent(std::string messageContent);
 
-    bool message::setUser(std::string sender);
+    message();
+    ~message();
 };
 #endif
