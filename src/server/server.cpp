@@ -1,15 +1,6 @@
 #include "server.h"
-#include <string.h>
-#include <string>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <errno.h>
-#include <assert.h>
-#include <exception>
-#include <sstream>
 
-///Helperfuncs
+/// Helperfuncs
 
 void Server::print_usage()
 {
@@ -17,19 +8,19 @@ void Server::print_usage()
     exit(EXIT_FAILURE);
 }
 
-///RichtigerCode
+/// RichtigerCode
 
 void Server::setupSocket()
 {
-    socket_fd = socket (AF_INET, SOCK_STREAM, 0);
+    socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     memset(&my_addr, 0, sizeof(my_addr));
     my_addr.sin_family = AF_INET;
     my_addr.sin_port = htons(port);
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    connectionCode = bind(socket_fd, (struct  sockaddr *) &my_addr, sizeof (my_addr));
+    connectionCode = bind(socket_fd, (struct sockaddr *)&my_addr, sizeof(my_addr));
 
-    if(connectionCode == -1)
+    if (connectionCode == -1)
     {
         perror("bind error");
         exit(EXIT_FAILURE);
@@ -62,7 +53,7 @@ void Server::readInput(int argc, char *argv[])
         print_usage();
         exit(EXIT_FAILURE);
     }
-    
+
     try
     {
         std::string s(argv[optind]);
@@ -70,7 +61,7 @@ void Server::readInput(int argc, char *argv[])
         optind++;
         dir = argv[optind];
     }
-    catch(...)
+    catch (...)
     {
         print_usage();
         exit(EXIT_FAILURE);
@@ -79,12 +70,16 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
-    while(connectionCode == 0)
+    while (connectionCode == 0)
     {
-        if(listen(socket_fd, 10) == -1)
+        if (listen(socket_fd, 10) == -1)
         {
             perror("listen error");
             exit(EXIT_FAILURE);
         }
     }
+}
+
+void Server::sendMessage()
+{
 }
