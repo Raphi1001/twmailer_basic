@@ -21,13 +21,13 @@ void Server::print_usage()
 
 void Server::setupSocket()
 {
-    socket_fd = socket (AF_INET, SOCK_STREAM, 0);
+    clientList = socket (AF_INET, SOCK_STREAM, 0);
 
     memset(&my_addr, 0, sizeof(my_addr));
     my_addr.sin_family = AF_INET;
     my_addr.sin_port = htons(port);
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    connectionCode = bind(socket_fd, (struct  sockaddr *) &my_addr, sizeof (my_addr));
+    connectionCode = bind(clientList, (struct  sockaddr *) &my_addr, sizeof (my_addr));
 
     if(connectionCode == -1)
     {
@@ -79,12 +79,44 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
-    while(connectionCode == 0)
+    if(listen(clientList, 1) == -1)
     {
-        if(listen(socket_fd, 10) == -1)
+        perror("listen error");
+        exit(EXIT_FAILURE);
+    }
+
+    while (true)
+    {
+        std::cout << "Warte auf Client" << std::endl;
+        if((clientConnect = accept(clientList, (struct sockaddr*)NULL, NULL)) == -1)
         {
-            perror("listen error");
+            std::cout << "Es ist ein Fehler beim listen aufgetreten" << std::endl;
             exit(EXIT_FAILURE);
         }
+        std::cout << "Server und Client wurden erfolgreich verbunden!" << std::endl;
+        snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
+        write(clientConnect, dataSending, strlen(dataSending));
+
+        reciveClient();  
     }
+}
+
+void Server::reciveClient()
+{
+    int rec;
+
+    std::cout << "Warte auf Client send" << std::endl;
+
+    if((rec = recv(clientConnect, dataReceived, sizeof(dataReceived), 0)) == -1)
+    {
+        std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    else if(rec == 0)
+    {
+        std::cout << "Remote socket wurde geschlossen" << std::endl;
+    }
+
+    dataReceived[rec] = '\n';
+    std::cout << dataReceived  << "-!-" << std::endl; 
 }

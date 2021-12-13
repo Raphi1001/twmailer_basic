@@ -11,9 +11,13 @@ class Server
     private:
         uint16_t port;
         std::string dir;
-        int socket_fd;
+        char dataSending[2048];
+        char dataReceived[2048];
         int connectionCode;
+        int clientConnect;
+        int clientList;
         struct sockaddr_in my_addr;
 
         void print_usage();
+        void reciveClient();
 };

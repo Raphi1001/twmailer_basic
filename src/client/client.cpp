@@ -12,7 +12,7 @@
 ///Helperfunc
 void Client::print_usage()
 {
-    std::cout << "Usage: ./twmailer-server <port> <mail-spool-directoryname>" << std::endl;
+    std::cout << "Usage: ./twmailer-client <ip> <port>" << std::endl;
     exit(EXIT_FAILURE);
 }
 
@@ -74,5 +74,43 @@ void Client::setupSocket()
     {
         perror("bind error");
         exit(EXIT_FAILURE);
+    }
+}
+
+void Client::readServer()
+{
+    while ((n = read(socket_fd, dataReceived, sizeof(dataReceived)-1)) > 0)
+    {
+        dataReceived[n] = 0;
+        if(fputs(dataReceived, stdout) == EOF)
+        {
+            std::cout << "Standard output error" << std::endl;
+        }
+
+    }
+
+    if(n < 0)
+    {
+        std::cout << "Standard input error" << std::endl;
+    }
+    
+}
+
+void Client::sendServer()
+{
+    int total = 0;
+    int i;
+    int len = (int)sizeof(dataSending) + 1;
+    int bytesleft = len;
+
+    while(total < len)
+    {
+        if((i = send(socket_fd, dataSending+total, bytesleft, 0)) == -1)
+        {
+            std::cout << "Fehler beim senden!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        total += i;
+        bytesleft -= i;
     }
 }
