@@ -7,5 +7,5 @@ server: ./src/server/serverMain.cpp
 	g++ -std=c++14 -Wall -Werror -o ./bin/server ./src/server/serverMain.cpp ./src/server/server.cpp ./src/server/server.h -pthread
 
 clean:
-	rm client
-	rm server
+	rm bin/client
+	rm bin/server
