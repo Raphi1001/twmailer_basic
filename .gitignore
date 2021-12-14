@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 #ignore everthing except obj + src folder and Makefile
 MyfindClass.d
+=======
+.vscode/
+>>>>>>> e24f02852c399c7a45600080334944bfa5404393
