@@ -75,7 +75,7 @@ void Database::sendMessage(std::string sender, std::string receiver, std::string
 {
     Message msgToSend = createMessage(sender, receiver, subject, messageContent);
 
-    for (int i = 0;; i < (int)users.size(); i++)
+    for (int i = 0; i < (int)users.size(); i++)
     {
         if (receiver == users[i].getUsername())
         {
@@ -118,7 +118,6 @@ bool Database::deleteMessage(string username, int msgNumber)
     {
         if (username == users[i].getUsername())
         {
-            er
         }
     }
     return true;
