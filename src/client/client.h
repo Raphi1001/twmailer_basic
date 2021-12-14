@@ -13,17 +13,20 @@
 #include <exception>
 #include <sstream>
 #include "../shared/message.h"
-#include "clientOptionEnum.h"
 
 class Client
 {
-public:
-    void readInput(int argc, char *argv[]);
-    void setupSocket();
-    void sendSend();
-    void userLogin();
-    ClientOption getOptions();
-    void startOption(ClientOption input);
+    public:
+        void readInput(int argc, char *argv[]);
+        void setupSocket();
+        void setSEND();
+        void setLIST();
+        void setREAD();
+        void setDEL();
+        void setQUIT();
+        void userLogin();
+        SendOption getOptions();
+        void startOption(SendOption input);
 
 private:
     void print_usage();

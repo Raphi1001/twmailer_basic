@@ -77,76 +77,117 @@ void Client::userLogin()
 
     while (!msg.setSender(s))
     {
-        std::cout << "Ungültige Eingabe, versuch es erneut: ";
+        std::cout << "Ungültige Eingabe, keine Sonderzeichen und weniger als 8 Zeichen: ";
         s = "";
         std::cin >> s;
     }
 }
 
-ClientOption Client::getOptions()
+SendOption Client::getOptions()
 {
-    char option;
+    std::string option;
 
-    std::cout << "Optionen: " << std::endl
-              << "  (1) SEND" << std::endl
-              << "  (2) LIST" << std::endl
-              << "  (3) READ" << std::endl
-              << "  (4) DEL" << std::endl
-              << "  (5) QUIT" << std::endl
-              << std::endl
-              << "Deine Eingabe: ";
+    std::cout << std::endl
+    << "Optionen: " << std::endl 
+    << "  (1) SEND" << std::endl 
+    << "  (2) LIST" << std::endl 
+    << "  (3) READ" << std::endl 
+    << "  (4) DEL" << std::endl 
+    << "  (5) QUIT" << std::endl 
+    << std::endl << "Deine Eingabe: ";
+    std::cin >> option;
 
-    do
+    while( option.length() != 1 || option[0] < 49 || option[0] > 53)
     {
+        std::cout << "Keine Gültige Option: ";
         std::cin >> option;
-    } while (option < 49 || option > 53);
-
-    switch (option)
-    {
-    case '1':
-        return SEND;
-
-    case '2':
-        return LIST;
-
-    case '3':
-        return READ;
-
-    case '4':
-        return DEL;
-
-    case '5':
-        return QUIT;
     }
-    return QUIT;
+    
+    switch(option[0])
+    {
+        case '1':
+            return SendOption::SEND;
+
+        case '2':
+            return SendOption::LIST;
+
+        case '3':
+            return SendOption::READ;
+
+        case '4':
+            return SendOption::DEL;
+
+        case '5':
+            return SendOption::QUIT;
+    }
+    return SendOption::QUIT;
 }
 
-void Client::startOption(ClientOption input)
+void Client::startOption(SendOption input)
 {
+    msg.cleanMsg();
+
+    switch(input)
+    {
+        case SEND:
+            setSEND();
+            break;
+
+        case LIST:
+            setLIST();
+            break;
+
+        case READ:
+            setREAD();
+            break;
+
+        case DEL:
+            setDEL();
+            break;
+
+        case QUIT:
+            setQUIT();
+            break;
+    }
+
+    msg.createMsgString();
+    sendServer();
 }
 
-void Client::sendSend()
+void Client::setSEND()
 {
+    std::string tmp;
+
+    std::cout << "Empfänger: ";
+    std::cin >> tmp;
+    while(!msg.setReciever(tmp))
+    {
+        std::cout << "Ungültige Eingabe, versuche es erneut: ";
+        std::cin >> tmp;
+    }
+
+    tmp = "";
+
+    std::cout << "Betreff: ";
+    std::cin >> tmp;
+    while(!msg.setSubject(tmp))
+    {
+        std::cout << "Ungültige Eingabe, versuche es erneut: ";
+        std::cin >> tmp;
+    }
+
+    tmp = "";
+
+    std::cout << "Nachricht: ";
+    std::cin >> tmp;
+    while(!msg.setMessageContent(tmp))
+    {
+        std::cout << "Ungültige Eingabe, versuche es erneut: ";
+        std::cin >> tmp;
+    }
 }
 
 void Client::readServer()
-{
-    while ((n = read(socket_fd, dataReceived, sizeof(dataReceived) - 1)) > 0)
-    {
-        dataReceived[n] = 0;
-        if (fputs(dataReceived, stdout) == EOF)
-        {
-            std::cout << "Standard output error" << std::endl;
-        }
-    }
-
-    if (n < 0)
-    {
-        std::cout << "Standard input error" << std::endl;
-    }
-}
-
-void Client::sendServer()
 {
     int total = 0;
     int i;
@@ -155,7 +196,9 @@ void Client::sendServer()
 
     while (total < len)
     {
-        if ((i = send(socket_fd, dataSending + total, bytesleft, 0)) == -1)
+        send(socket_fd, msg.getSender().c_str(), sizeof(msg.getSender()), 0);
+
+        if((i = send(socket_fd, dataSending+total, bytesleft, 0)) == -1)
         {
             std::cout << "Fehler beim senden!" << std::endl;
             exit(EXIT_FAILURE);
