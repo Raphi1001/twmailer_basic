@@ -6,12 +6,10 @@ Message::Message()
 {
 }
 
-bool Message::setMessageNumber(int messageNumber)
+bool Message::setMessageNumber(int number)
 {
-    // TODO: set messageNumber correctly
-
-    this->messageNumber = messageNumber;
-
+    Message::messageCount++;
+    this->messageNumber = messageCount;
     return true;
 }
 
@@ -24,12 +22,12 @@ bool Message::setSender(string sender)
     return true;
 }
 
-bool Message::setReciever(string reciever)
+bool Message::setreceiver(string receiver)
 {
-    if (!checkMaxSize(reciever, 8) || !isDigitLetterOnly(reciever))
+    if (!checkMaxSize(receiver, 8) || !isDigitLetterOnly(receiver))
         return false;
 
-    this->reciever = reciever;
+    this->receiver = receiver;
     return true;
 }
 
@@ -59,9 +57,9 @@ std::string Message::getSender()
 {
     return sender;
 }
-std::string Message::getReciever()
+std::string Message::getreceiver()
 {
-    return reciever;
+    return receiver;
 }
 std::string Message::getSubject()
 {
@@ -92,8 +90,8 @@ void Message::loadMessage(std::string msgPath)
         exitFailure("Ungültiger Sender: " + sender);
 
     getline(input_file, currentLine);
-    if (!setReciever(currentLine))
-        exitFailure("Ungültiger Empfänger: " + reciever);
+    if (!setreceiver(currentLine))
+        exitFailure("Ungültiger Empfänger: " + receiver);
 
     getline(input_file, currentLine);
     if (!setSubject(currentLine))

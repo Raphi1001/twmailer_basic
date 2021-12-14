@@ -11,12 +11,17 @@ void User::setUsername(std::string username)
 
 void User::addMessage(Message msg)
 {
-    recievedMessages.push_back(msg);
+    receivedMessages.push_back(msg);
 }
 
 vector<Message> User::getMessages()
 {
-    return recievedMessages;
+    return receivedMessages;
+}
+
+string User::getUsername()
+{
+    return username;
 }
 
 void User::loadUser(string username, string userDirectory)

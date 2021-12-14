@@ -10,24 +10,25 @@
 class Message
 {
 private:
+    static int messageCount;
     int messageNumber;
     std::string sender;
-    std::string reciever;
+    std::string receiver;
     std::string subject;
     std::string messageContent;
 
 public:
     /* SETTER */
-    bool setMessageNumber(int messageNumber);
+    bool setMessageNumber(int number);
     bool setSender(std::string sender);
-    bool setReciever(std::string reciever);
+    bool setreceiver(std::string receiver);
     bool setSubject(std::string subject);
     bool setMessageContent(std::string messageContent);
 
     /* GETTER */
     int getMessageNumber();
     std::string getSender();
-    std::string getReciever();
+    std::string getreceiver();
     std::string getSubject();
     std::string getMessageContent();
 

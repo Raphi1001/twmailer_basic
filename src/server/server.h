@@ -13,6 +13,8 @@
 #include <exception>
 #include <sstream>
 
+#include "database.h"
+#include "user.h"
 #include "../shared/message.h"
 
 class Server
@@ -34,7 +36,12 @@ private:
 
     void print_usage();
     void reciveClient();
-    void sendMessage();
+
+    bool sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
+    User listUserMessages();
+    Message readMessage();
+    bool deleteMessage();
+    void quitClient(std::string client);
 };
 
 #endif

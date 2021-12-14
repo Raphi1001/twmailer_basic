@@ -27,10 +27,15 @@ public:
     void setDir(std::string dirName);
     void addUser(User user);
 
+    /* GETTER */
+
+    std::vector<User> getUsers();
+
     /* FUNC */
 
     bool dirExists();
     bool dirIsEmpty();
     void loadDatabase();
+    void send();
 };
 #endif

@@ -17,7 +17,18 @@ void Database::setDir(string dirName)
 
 void Database::addUser(User user)
 {
+    for (int i = 0; i < (int)users.size(); i++)
+    {
+        if (user.getUsername() == users[i].getUsername())
+            exitFailure("Duplicate User: " + user.getUsername());
+    }
+
     users.push_back(user);
+}
+
+vector<User> Database::getUsers()
+{
+    return users;
 }
 
 bool Database::dirExists()
@@ -59,8 +70,4 @@ void Database::loadDatabase()
         }
     }
     closedir(dirp);
-
-    vector<Message> messages = users[0].getMessages();
-    Message message = messages[0];
-    cout << message.getSubject() << endl;
 }

@@ -1,8 +1,5 @@
 #include "server.h"
 
-#include "../shared/message.h"
-#include "database.h"
-
 /// Helperfuncs
 
 void Server::print_usage()
@@ -73,12 +70,6 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
-    Database testDatabase;
-
-    testDatabase.setDir("moin");
-
-    std::cout << "Wir sind durch bitches" << std::endl;
-
     while (connectionCode == 0)
     {
 
@@ -103,10 +94,6 @@ void Server::listenToClient()
     }
 }
 
-void Server::sendMessage()
-{
-}
-
 void Server::reciveClient()
 {
     int rec;
@@ -125,4 +112,9 @@ void Server::reciveClient()
 
     dataReceived[rec] = '\n';
     std::cout << dataReceived << "-!-" << std::endl;
+}
+
+bool Server::sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent)
+{
+    Message newMsg(sender)
 }
