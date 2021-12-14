@@ -60,7 +60,6 @@ void Database::loadDatabase()
 
     while ((direntp = readdir(dirp)) != NULL)
     {
-
         if (strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0) //"." und ".." Verzeichnisse überspringen
         {
             string currentUserPath(dir + "/" + direntp->d_name);
@@ -70,4 +69,57 @@ void Database::loadDatabase()
         }
     }
     closedir(dirp);
+}
+
+void Database::sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent)
+{
+    Message msgToSend = createMessage(sender, receiver, subject, messageContent);
+
+    for (int i = 0;; i < (int)users.size(); i++)
+    {
+        if (receiver == users[i].getUsername())
+        {
+            string newPath(dir + "/" + users[i].getUsername() + "/" + subject + ".txt");
+            cout << newPath << endl;
+            users[i].addMessage(msgToSend, newPath);
+            return;
+        }
+    }
+    createUser(receiver);
+    string newPath(dir + "/" + users.back().getUsername() + "/" + subject + ".txt");
+    cout << newPath << endl;
+    users.back().addMessage(msgToSend, newPath);
+}
+
+void Database::createUser(std::string username)
+{
+    User newUser;
+    newUser.setUsername(username);
+    addUser(newUser);
+
+    string path = dir + "/" + newUser.getUsername();
+    if (mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IRWXO) == -1)
+        exitFailure((char *)errno);
+}
+
+Message Database::createMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent)
+{
+    Message newMessage;
+    newMessage.setSender(sender);
+    newMessage.setReceiver(receiver);
+    newMessage.setSubject(subject);
+    newMessage.setMessageContent(messageContent);
+    return newMessage;
+}
+
+bool Database::deleteMessage(string username, int msgNumber)
+{
+    for (int i = 0; i < users.size(); ++i)
+    {
+        if (username == users[i].getUsername())
+        {
+            er
+        }
+    }
+    return true;
 }

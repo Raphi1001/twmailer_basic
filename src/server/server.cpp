@@ -113,8 +113,3 @@ void Server::reciveClient()
     dataReceived[rec] = '\n';
     std::cout << dataReceived << "-!-" << std::endl;
 }
-
-bool Server::sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent)
-{
-    Message newMsg(sender)
-}

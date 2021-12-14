@@ -16,11 +16,12 @@ class User
 private:
     std::string username;
     std::vector<Message> receivedMessages;
+    int fileCount = 0;
 
 public:
     /* SETTER */
     void setUsername(std::string username);
-    void addMessage(Message msg);
+    void addMessage(Message msg, std::string pathToMsg);
 
     /* GETTER */
     std::vector<Message> getMessages();
