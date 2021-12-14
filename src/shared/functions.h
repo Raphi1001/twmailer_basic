@@ -4,11 +4,8 @@
 #include <string>
 #include <iostream>
 
-namespace generalFuncions
-{
-    bool exitFailure(std::string errorMsg);
-    bool checkMaxSize(std::string word, int max);
-    bool isDigitLetterOnly(std::string word);
-} // namespace generalFunctions
+void exitFailure(std::string errorMsg);
+bool checkMaxSize(std::string word, int max);
+bool isDigitLetterOnly(std::string word);
 
 #endif

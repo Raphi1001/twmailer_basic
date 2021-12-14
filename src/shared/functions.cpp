@@ -1,7 +1,6 @@
 #include "functions.h"
 
 using namespace std;
-using namespace generalFuncions;
 
 // gibt Fehlermeldung aus und beendet das Programm
 void exitFailure(string errorMsg)
