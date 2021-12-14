@@ -137,7 +137,7 @@ void Message::loadMessage(std::string msgPath, int number)
 void Message::cleanMsg()
 {
     messageHead = "";
-    reciever = "";
+    receiver = "";
     subject = "";
     messageContent = "";
     messageNumber = -1;
@@ -151,8 +151,8 @@ void Message::createMsgString()
     if (sender != "")
         messageString += sender + "\n";
 
-    if (reciever != "")
-        messageString += reciever + "\n";
+    if (receiver != "")
+        messageString += receiver + "\n";
 
     if (subject != "")
         messageString += subject + "\n";
