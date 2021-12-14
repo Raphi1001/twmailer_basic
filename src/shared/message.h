@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include "SendOptionEnum.h"
 
 #include <fstream>
 
@@ -14,6 +15,8 @@ private:
     std::string reciever;
     std::string subject;
     std::string messageContent;
+    std::string messageHead;
+    std::string messageString;
 
 public:
     /* SETTER */
@@ -22,6 +25,7 @@ public:
     bool setReciever(std::string reciever);
     bool setSubject(std::string subject);
     bool setMessageContent(std::string messageContent);
+    void setMessageHead(SendOption messageHead);
 
     /* GETTER */
     int getMessageNumber();
@@ -29,11 +33,15 @@ public:
     std::string getReciever();
     std::string getSubject();
     std::string getMessageContent();
+    std::string getMessageHead();
+    std::string getMessageString();
 
     /* FUNC */
     void loadMessage(std::string msgPath);
     bool isDigitLetterOnly(std::string word);
     bool checkMaxSize(std::string word, int max);
+    void cleanMsg();
+    void createMsgString();
 
     Message();
 };

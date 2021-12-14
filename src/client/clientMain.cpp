@@ -1,11 +1,10 @@
 #include "client.h"
-#include "message.h"
 #include <unistd.h>
 
 int main(int argc, char *argv[])
 {
     Client client;
-    ClientOption input;
+    SendOption input;
 
     client.userLogin();
     while((input = client.getOptions()) != QUIT)

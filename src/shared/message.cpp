@@ -50,6 +50,36 @@ bool Message::setMessageContent(string messageContent)
     return true;
 }
 
+void Message::setMessageHead(SendOption messageHead)
+{
+    switch(messageHead)
+    {
+        case SEND:
+            this->messageHead = "SEND\n";
+            break;
+
+        case LIST:
+            this->messageHead = "LIST\n";
+            break;
+
+        case READ:
+            this->messageHead = "READ\n";
+            break;
+
+        case DEL:
+            this->messageHead = "DEL\n";
+            break;
+
+        case QUIT:
+            this->messageHead = "QUIT\n";
+            break;
+
+        default:
+            this->messageHead = "";
+            break;
+    }
+}
+
 int Message::getMessageNumber()
 {
     return messageNumber;
@@ -69,6 +99,10 @@ std::string Message::getSubject()
 std::string Message::getMessageContent()
 {
     return messageContent;
+}
+std::string Message::getMessageString()
+{
+    return messageString;
 }
 
 // prüft ob ein string eine gegebene Maximallänge nicht überschreitet
@@ -119,4 +153,36 @@ void Message::loadMessage(std::string msgPath)
     setMessageContent(currentLine);
 
     input_file.close();
+}
+
+void Message::cleanMsg()
+{
+    messageHead = "";
+    reciever = "";
+    subject = "";
+    messageContent = "";
+    messageNumber = -1;
+    messageString = "";
+}
+
+void Message::createMsgString()
+{
+    messageString = messageHead;
+
+    if(sender != "")
+        messageString += sender + "\n";
+
+    if(reciever != "")
+        messageString += reciever + "\n";
+
+    if(subject != "")
+        messageString += subject + "\n";
+
+    if(messageContent != "")
+        messageString += messageContent + "\n";
+
+    if(messageNumber != -1)
+        messageString += to_string(messageNumber) + "\n";
+
+    messageString += ".\n";
 }

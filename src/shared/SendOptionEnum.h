@@ -1,4 +1,4 @@
-enum ClientOption{
+enum SendOption{
     SEND = 1,
     LIST = 2,
     READ = 3,

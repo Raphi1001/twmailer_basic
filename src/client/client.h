@@ -12,18 +12,21 @@
 #include <assert.h>
 #include <exception>
 #include <sstream>
-#include <message.h>
-#include "clientOptionEnum.h"
+#include "../shared/message.h"
 
 class Client
 {
     public:
         void readInput(int argc, char *argv[]);
         void setupSocket();
-        void sendSend();
+        void setSEND();
+        void setLIST();
+        void setREAD();
+        void setDEL();
+        void setQUIT();
         void userLogin();
-        ClientOption getOptions();
-        void startOption(ClientOption input);
+        SendOption getOptions();
+        void startOption(SendOption input);
 
     private:
         void print_usage();
