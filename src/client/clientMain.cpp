@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     SendOption input;
 
     client.userLogin();
-    while((input = client.getOptions()) != QUIT)
+    while ((input = client.getOptions()) != QUIT)
     {
         client.startOption(input);
     }

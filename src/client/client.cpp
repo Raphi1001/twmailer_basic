@@ -102,7 +102,7 @@ SendOption Client::getOptions()
         std::cout << "Keine Gültige Option: ";
         std::cin >> option;
     }
-
+    
     switch(option[0])
     {
         case '1':
@@ -187,53 +187,14 @@ void Client::setSEND()
     }
 }
 
-void Client::setLIST()
-{
-
-}
-
-void Client::setREAD()
-{
-
-}
-
-void Client::setDEL()
-{
-
-}
-
-void Client::setQUIT()
-{
-
-}
-
 void Client::readServer()
 {
-    while ((n = read(socket_fd, dataReceived, sizeof(dataReceived)-1)) > 0)
-    {
-        dataReceived[n] = 0;
-        if(fputs(dataReceived, stdout) == EOF)
-        {
-            std::cout << "Standard output error" << std::endl;
-        }
-    }
-
-    if(n < 0)
-    {
-        std::cout << "Standard input error" << std::endl;
-    }
-}
-
-void Client::sendServer()
-{
-    std::cout << msg.getMessageString();
-
     int total = 0;
     int i;
     int len = (int)sizeof(dataSending) + 1;
     int bytesleft = len;
 
-    while(total < len)
+    while (total < len)
     {
         send(socket_fd, msg.getSender().c_str(), sizeof(msg.getSender()), 0);
 

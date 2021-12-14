@@ -8,14 +8,27 @@ void Database::setDir(string dirName)
     if (!dirExists())
     {
         if (mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO) == -1)
-        {
-            cerr << strerror(errno) << endl;
-            exit(EXIT_FAILURE);
-        }
+            exitFailure((char *)errno);
     }
 
     if (!dirIsEmpty())
         loadDatabase();
+}
+
+void Database::addUser(User user)
+{
+    for (int i = 0; i < (int)users.size(); i++)
+    {
+        if (user.getUsername() == users[i].getUsername())
+            exitFailure("Duplicate User: " + user.getUsername());
+    }
+
+    users.push_back(user);
+}
+
+vector<User> Database::getUsers()
+{
+    return users;
 }
 
 bool Database::dirExists()
@@ -37,15 +50,13 @@ bool Database::dirIsEmpty()
     return false;
 }
 
+// laed existierende datenbank
 void Database::loadDatabase()
 {
     struct dirent *direntp;
     DIR *dirp = opendir(dir.c_str());
     if (!dirp)
-    {
-        cerr << "Directory konnte nicht geöffnet werden: " << dir << endl;
-        exit(EXIT_FAILURE);
-    }
+        exitFailure("Directory konnte nicht geöffnet werden: " + dir);
 
     while ((direntp = readdir(dirp)) != NULL)
     {
@@ -59,13 +70,4 @@ void Database::loadDatabase()
         }
     }
     closedir(dirp);
-
-    vector<Message> messages = users[0].getMessages();
-    Message message = messages[0];
-    cout << message.getMessageContent() << endl;
-}
-
-void Database::addUser(User user)
-{
-    users.push_back(user);
 }

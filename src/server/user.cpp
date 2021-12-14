@@ -4,17 +4,24 @@ using namespace std;
 
 void User::setUsername(std::string username)
 {
+    if (!checkMaxSize(username, 8) || !isDigitLetterOnly(username))
+        exitFailure("Ungültiger Username: " + username);
     this->username = username;
 }
 
 void User::addMessage(Message msg)
 {
-    recievedMessages.push_back(msg);
+    receivedMessages.push_back(msg);
 }
 
 vector<Message> User::getMessages()
 {
-    return recievedMessages;
+    return receivedMessages;
+}
+
+string User::getUsername()
+{
+    return username;
 }
 
 void User::loadUser(string username, string userDirectory)
@@ -24,10 +31,8 @@ void User::loadUser(string username, string userDirectory)
     struct dirent *direntp;
     DIR *dirp = opendir(userDirectory.c_str());
     if (!dirp)
-    {
-        cerr << "Directory konnte nicht geöffnet werden: " << userDirectory << endl;
-        exit(EXIT_FAILURE);
-    }
+        exitFailure("Directory konnte nicht geöffnet werden: " + userDirectory);
+
     while ((direntp = readdir(dirp)) != NULL)
     {
 

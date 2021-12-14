@@ -38,8 +38,6 @@ public:
 
     /* FUNC */
     void loadMessage(std::string msgPath);
-    bool isDigitLetterOnly(std::string word);
-    bool checkMaxSize(std::string word, int max);
     void cleanMsg();
     void createMsgString();
 

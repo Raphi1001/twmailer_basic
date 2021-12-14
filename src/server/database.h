@@ -12,6 +12,8 @@
 #include <dirent.h>
 
 #include "user.h"
+#include "../shared/functions.h"
+
 class Database
 {
 
@@ -20,11 +22,20 @@ private:
     std::vector<User> users;
 
 public:
+    /* SETTER */
+
     void setDir(std::string dirName);
+    void addUser(User user);
+
+    /* GETTER */
+
+    std::vector<User> getUsers();
+
+    /* FUNC */
+
     bool dirExists();
     bool dirIsEmpty();
     void loadDatabase();
-    void addUser(User user);
-    void loadUser(std::string userDirectory);
+    void send();
 };
 #endif

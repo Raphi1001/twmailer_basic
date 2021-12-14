@@ -1,8 +1,5 @@
 #include "server.h"
 
-#include "../shared/message.h"
-#include "database.h"
-
 /// Helperfuncs
 
 void Server::print_usage()
@@ -15,13 +12,13 @@ void Server::print_usage()
 
 void Server::setupSocket()
 {
-    clientList = socket (AF_INET, SOCK_STREAM, 0);
+    clientList = socket(AF_INET, SOCK_STREAM, 0);
 
     memset(&my_addr, 0, sizeof(my_addr));
     my_addr.sin_family = AF_INET;
     my_addr.sin_port = htons(port);
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    connectionCode = bind(clientList, (struct  sockaddr *) &my_addr, sizeof (my_addr));
+    connectionCode = bind(clientList, (struct sockaddr *)&my_addr, sizeof(my_addr));
 
     if (connectionCode == -1)
     {
@@ -73,39 +70,28 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
-    Database testDatabase;
-
-    testDatabase.setDir("moin");
-
-    std::cout << "Wir sind durch bitches" << std::endl;
-
     while (connectionCode == 0)
     {
 
-        if(listen(clientList, 1) == -1)
+        if (listen(clientList, 1) == -1)
         {
             perror("listen error");
             exit(EXIT_FAILURE);
         }
 
         std::cout << "Warte auf Client" << std::endl;
-        if((clientConnect = accept(clientList, (struct sockaddr*)NULL, NULL)) == -1)
+        if ((clientConnect = accept(clientList, (struct sockaddr *)NULL, NULL)) == -1)
         {
-        std::cout << "Es ist ein Fehler beim listen aufgetreten" << std::endl;
-        exit(EXIT_FAILURE);
+            std::cout << "Es ist ein Fehler beim listen aufgetreten" << std::endl;
+            exit(EXIT_FAILURE);
         }
-        
+
         std::cout << "Server und Client wurden erfolgreich verbunden!" << std::endl;
         snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
         write(clientConnect, dataSending, strlen(dataSending));
 
-        reciveClient();  
+        reciveClient();
     }
-}
-
-void Server::sendMessage()
-{
-
 }
 
 void Server::reciveClient()
@@ -114,16 +100,21 @@ void Server::reciveClient()
 
     std::cout << "Warte auf Client send" << std::endl;
 
-    if((rec = recv(clientConnect, dataReceived, sizeof(dataReceived), 0)) == -1)
+    if ((rec = recv(clientConnect, dataReceived, sizeof(dataReceived), 0)) == -1)
     {
         std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
         exit(EXIT_FAILURE);
     }
-    else if(rec == 0)
+    else if (rec == 0)
     {
         std::cout << "Remote socket wurde geschlossen" << std::endl;
     }
 
     dataReceived[rec] = '\n';
-    std::cout << dataReceived  << "-!-" << std::endl; 
+    std::cout << dataReceived << "-!-" << std::endl;
+}
+
+bool Server::sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent)
+{
+    Message newMsg(sender)
 }
