@@ -6,47 +6,49 @@ Message::Message()
 {
 }
 
-void Message::setMessageNumber(int messageNumber)
+bool Message::setMessageNumber(int messageNumber)
 {
     // TODO: set messageNumber correctly
 
     this->messageNumber = messageNumber;
 
-    return;
-
-    exitFailure("Ungültige MessageNumber: " + messageNumber);
+    return true;
 }
 
-void Message::setSender(string sender)
+bool Message::setSender(string sender)
 {
     if (!checkMaxSize(sender, 8) || !isDigitLetterOnly(sender))
-        exitFailure("Ungültiger Sender: " + sender);
+        return false;
 
     this->sender = sender;
+    return true;
 }
 
-void Message::setReciever(string reciever)
+bool Message::setReciever(string reciever)
 {
     if (!checkMaxSize(reciever, 8) || !isDigitLetterOnly(reciever))
-        exitFailure("Ungültiger Empfänger: " + reciever);
+        return false;
 
     this->reciever = reciever;
+    return true;
 }
 
-void Message::setSubject(string subject)
+bool Message::setSubject(string subject)
 {
     if (!checkMaxSize(subject, 80) || !isDigitLetterOnly(subject))
-        exitFailure("Ungültiger Betreff: " + subject);
+        return false;
 
     this->subject = subject;
+    return true;
 }
 
-void Message::setMessageContent(string messageContent)
+bool Message::setMessageContent(string messageContent)
 {
     if (!isDigitLetterOnly(messageContent))
-        exitFailure("Ungültige Nachricht: " + messageContent);
+        return false;
 
     this->messageContent = messageContent;
+    return true;
 }
 
 int Message::getMessageNumber()
@@ -82,19 +84,24 @@ void Message::loadMessage(std::string msgPath)
     getline(input_file, currentLine);
     char *end;
     int number = strtol(currentLine.c_str(), &end, 10);
-    setMessageNumber(number);
+    if (!setMessageNumber(number))
+        exitFailure("Ungültige MessageNumber: " + messageNumber);
 
     getline(input_file, currentLine);
-    setSender(currentLine);
+    if (!setSender(currentLine))
+        exitFailure("Ungültiger Sender: " + sender);
 
     getline(input_file, currentLine);
-    setReciever(currentLine);
+    if (!setReciever(currentLine))
+        exitFailure("Ungültiger Empfänger: " + reciever);
 
     getline(input_file, currentLine);
-    setSubject(currentLine);
+    if (!setSubject(currentLine))
+        exitFailure("Ungültiger Betreff: " + currentLine);
 
     getline(input_file, currentLine);
-    setMessageContent(currentLine);
+    if (!setMessageContent(currentLine))
+        exitFailure("Ungültige Nachricht: " + messageContent);
 
     input_file.close();
 }

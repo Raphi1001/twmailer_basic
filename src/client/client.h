@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <exception>
 #include <sstream>
-#include <message.h>
+#include "../shared/message.h"
 #include "clientOptionEnum.h"
 
 class Client

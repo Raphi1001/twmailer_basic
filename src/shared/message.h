@@ -18,11 +18,11 @@ private:
 
 public:
     /* SETTER */
-    void setMessageNumber(int messageNumber);
-    void setSender(std::string sender);
-    void setReciever(std::string reciever);
-    void setSubject(std::string subject);
-    void setMessageContent(std::string messageContent);
+    bool setMessageNumber(int messageNumber);
+    bool setSender(std::string sender);
+    bool setReciever(std::string reciever);
+    bool setSubject(std::string subject);
+    bool setMessageContent(std::string messageContent);
 
     /* GETTER */
     int getMessageNumber();
