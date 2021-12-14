@@ -1,6 +1,7 @@
 #include "server.h"
 
 #include "../shared/message.h"
+#include "database.h"
 
 /// Helperfuncs
 
@@ -72,11 +73,11 @@ void Server::readInput(int argc, char *argv[])
 
 void Server::listenToClient()
 {
-    message test;
-    if (test.setSender("hllo123"))
-        std::cout << "passt" << std::endl;
-    else
-        std::cout << "passt nicht" << std::endl;
+    Database testDatabase;
+
+    testDatabase.setDir("moin");
+
+    std::cout << "Wir sind durch bitches" << std::endl;
 
     while (connectionCode == 0)
     {
