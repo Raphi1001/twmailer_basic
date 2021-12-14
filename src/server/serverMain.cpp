@@ -7,7 +7,4 @@ int main(int argc, char *argv[])
     server.readInput(argc, argv);
     server.setupSocket();
     server.listenToClient();
-
-
-
 }

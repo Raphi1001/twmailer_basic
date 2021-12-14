@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "../shared/message.h"
+#include "../shared/functions.h"
 
 class User
 {

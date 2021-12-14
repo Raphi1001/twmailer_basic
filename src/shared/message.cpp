@@ -6,48 +6,47 @@ Message::Message()
 {
 }
 
-bool Message::setMessageNumber(int messageNumber)
+void Message::setMessageNumber(int messageNumber)
 {
-    // ToDO: set messageNumber correctly
+    // TODO: set messageNumber correctly
 
     this->messageNumber = messageNumber;
-    return true;
+
+    return;
+
+    exitFailure("Ungültige MessageNumber: " + messageNumber);
 }
 
-bool Message::setSender(string sender)
+void Message::setSender(string sender)
 {
     if (!checkMaxSize(sender, 8) || !isDigitLetterOnly(sender))
-        return false;
+        exitFailure("Ungültiger Sender: " + sender);
 
     this->sender = sender;
-    return true;
 }
 
-bool Message::setReciever(string reciever)
+void Message::setReciever(string reciever)
 {
     if (!checkMaxSize(reciever, 8) || !isDigitLetterOnly(reciever))
-        return false;
+        exitFailure("Ungültiger Empfänger: " + reciever);
 
     this->reciever = reciever;
-    return true;
 }
 
-bool Message::setSubject(string subject)
+void Message::setSubject(string subject)
 {
-    if (!checkMaxSize(reciever, 80) || !isDigitLetterOnly(reciever))
-        return false;
+    if (!checkMaxSize(subject, 80) || !isDigitLetterOnly(subject))
+        exitFailure("Ungültiger Betreff: " + subject);
 
     this->subject = subject;
-    return true;
 }
 
-bool Message::setMessageContent(string messageContent)
+void Message::setMessageContent(string messageContent)
 {
     if (!isDigitLetterOnly(messageContent))
-        return false;
+        exitFailure("Ungültige Nachricht: " + messageContent);
 
     this->messageContent = messageContent;
-    return true;
 }
 
 int Message::getMessageNumber()
@@ -71,40 +70,19 @@ std::string Message::getMessageContent()
     return messageContent;
 }
 
-// prüft ob ein string eine gegebene Maximallänge nicht überschreitet
-bool Message::checkMaxSize(string word, int max)
-{
-    if ((int)word.size() > max)
-        return false;
-
-    return true;
-}
-
-// prüft ob ein string nur aus buchstaben und zahlen besteht
-bool Message::isDigitLetterOnly(string word)
-{
-    for (int i = 0; i < (int)word.size(); i++)
-    {
-        if (!isdigit(word.at(i)) && !isalpha(word.at(i)))
-            return false;
-    }
-    return true;
-}
-
 void Message::loadMessage(std::string msgPath)
 {
     ifstream input_file(msgPath);
 
     if (!input_file.is_open())
-    {
-        cerr << "File konnte nicht geöffnet werden: " << msgPath << endl;
-        exit(EXIT_FAILURE);
-    }
+        exitFailure("File konnte nicht geöffnet werden: " + msgPath);
 
     string currentLine;
+
     getline(input_file, currentLine);
     char *end;
-    setMessageNumber(strtod(currentLine.c_str(), &end));
+    int number = strtol(currentLine.c_str(), &end, 10);
+    setMessageNumber(number);
 
     getline(input_file, currentLine);
     setSender(currentLine);
