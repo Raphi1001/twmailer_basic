@@ -3,7 +3,7 @@
 /// Helperfunc
 void Client::print_usage()
 {
-    std::cout << "Usage: ./twmailer-server <port> <mail-spool-directoryname>" << std::endl;
+    std::cout << "Usage: ./twmailer-client <ip> <port>" << std::endl;
     exit(EXIT_FAILURE);
 }
 
@@ -103,32 +103,67 @@ ClientOption Client::getOptions()
     switch(option)
     {
         case '1':
-            return ClientOption.SEND;
+            return SEND;
 
         case '2':
-            return ClientOption.LIST;
-        break;
+            return LIST;
 
         case '3':
-            return ClientOption.READ;
-        break;
+            return READ;
 
         case '4':
-            return ClientOption.DEL;
-        break;
+            return DEL;
 
         case '5':
-            return ClientOption.QUIT;
-        break;
+            return QUIT;
     }
-    return ClientOption.QUIT;
+    return QUIT;
 }
 
-void Client::startOption(){
+void Client::startOption(ClientOption input)
+{
 
 }
 
 void Client::sendSend()
 {
 
+}
+
+void Client::readServer()
+{
+    while ((n = read(socket_fd, dataReceived, sizeof(dataReceived)-1)) > 0)
+    {
+        dataReceived[n] = 0;
+        if(fputs(dataReceived, stdout) == EOF)
+        {
+            std::cout << "Standard output error" << std::endl;
+        }
+
+    }
+
+    if(n < 0)
+    {
+        std::cout << "Standard input error" << std::endl;
+    }
+    
+}
+
+void Client::sendServer()
+{
+    int total = 0;
+    int i;
+    int len = (int)sizeof(dataSending) + 1;
+    int bytesleft = len;
+
+    while(total < len)
+    {
+        if((i = send(socket_fd, dataSending+total, bytesleft, 0)) == -1)
+        {
+            std::cout << "Fehler beim senden!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        total += i;
+        bytesleft -= i;
+    }
 }
