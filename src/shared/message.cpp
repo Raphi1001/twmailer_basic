@@ -8,8 +8,7 @@ Message::Message()
 
 bool Message::setMessageNumber(int number)
 {
-    Message::messageCount++;
-    this->messageNumber = messageCount;
+    this->messageNumber = number;
     return true;
 }
 
@@ -22,7 +21,7 @@ bool Message::setSender(string sender)
     return true;
 }
 
-bool Message::setreceiver(string receiver)
+bool Message::setReceiver(string receiver)
 {
     if (!checkMaxSize(receiver, 8) || !isDigitLetterOnly(receiver))
         return false;
@@ -57,7 +56,7 @@ std::string Message::getSender()
 {
     return sender;
 }
-std::string Message::getreceiver()
+std::string Message::getReceiver()
 {
     return receiver;
 }
@@ -70,7 +69,7 @@ std::string Message::getMessageContent()
     return messageContent;
 }
 
-void Message::loadMessage(std::string msgPath)
+void Message::loadMessage(std::string msgPath, int number)
 {
     ifstream input_file(msgPath);
 
@@ -80,17 +79,11 @@ void Message::loadMessage(std::string msgPath)
     string currentLine;
 
     getline(input_file, currentLine);
-    char *end;
-    int number = strtol(currentLine.c_str(), &end, 10);
-    if (!setMessageNumber(number))
-        exitFailure("Ungültige MessageNumber: " + messageNumber);
-
-    getline(input_file, currentLine);
     if (!setSender(currentLine))
         exitFailure("Ungültiger Sender: " + sender);
 
     getline(input_file, currentLine);
-    if (!setreceiver(currentLine))
+    if (!setReceiver(currentLine))
         exitFailure("Ungültiger Empfänger: " + receiver);
 
     getline(input_file, currentLine);
@@ -100,6 +93,8 @@ void Message::loadMessage(std::string msgPath)
     getline(input_file, currentLine);
     if (!setMessageContent(currentLine))
         exitFailure("Ungültige Nachricht: " + messageContent);
+
+    setMessageNumber(number);
 
     input_file.close();
 }
