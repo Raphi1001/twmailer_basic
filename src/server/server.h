@@ -1,5 +1,5 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef SERVER_H
+#define SERVER_H
 
 #include <netinet/in.h>
 #include <iostream>
@@ -25,12 +25,16 @@ public:
 private:
     uint16_t port;
     std::string dir;
-    int socket_fd;
+    char dataSending[2048];
+    char dataReceived[2048];
     int connectionCode;
+    int clientConnect;
+    int clientList;
     struct sockaddr_in my_addr;
 
     void print_usage();
-
+    void reciveClient();
     void sendMessage();
 };
+
 #endif
