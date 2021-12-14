@@ -160,7 +160,7 @@ void Client::setSEND()
 
     std::cout << "Empfänger: ";
     std::cin >> tmp;
-    while(!msg.setReciever(tmp))
+    while(!msg.setReceiver(tmp))
     {
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
         std::cin >> tmp;
@@ -185,6 +185,48 @@ void Client::setSEND()
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
         std::cin >> tmp;
     }
+}
+
+void Client::setLIST()
+{
+
+}
+
+void Client::setREAD()
+{
+
+}
+
+void Client::setDEL()
+{
+
+}
+
+void Client::setQUIT()
+{
+    
+}
+
+void Client::sendServer()
+{   
+    int i;
+    int total = 0;
+    int len = (int)sizeof(msg.getMessageString()) + 1;
+    int bytesleft = len;
+
+    while (total < len)
+    {
+        if((i = send(socket_fd, msg.getMessageContent().c_str(), sizeof(msg.getSender()), 0)) == -1)
+        {
+            std::cout << "Fehler beim senden!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        total += i;
+        bytesleft -= i;
+    }
+
+    n == -1 ? std::cout << "Fehler beim senden!" : std::cout << "Senden war erfolgreich";
+    std::cout << std::endl;
 }
 
 void Client::readServer()

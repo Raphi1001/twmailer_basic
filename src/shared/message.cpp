@@ -6,13 +6,6 @@ Message::Message()
 {
 }
 
-bool Message::setMessageNumber(int number)
-{
-    Message::messageCount++;
-    this->messageNumber = messageCount;
-    return true;
-}
-
 bool Message::setSender(string sender)
 {
     if (!checkMaxSize(sender, 8) || !isDigitLetterOnly(sender))
@@ -22,7 +15,7 @@ bool Message::setSender(string sender)
     return true;
 }
 
-bool Message::setreceiver(string receiver)
+bool Message::setReceiver(string receiver)
 {
     if (!checkMaxSize(receiver, 8) || !isDigitLetterOnly(receiver))
         return false;
@@ -89,7 +82,7 @@ std::string Message::getSender()
 }
 std::string Message::getReciever()
 {
-    return reciever;
+    return receiver;
 }
 std::string Message::getSubject()
 {
@@ -104,26 +97,6 @@ std::string Message::getMessageString()
     return messageString;
 }
 
-// prüft ob ein string eine gegebene Maximallänge nicht überschreitet
-bool Message::checkMaxSize(string word, int max)
-{
-    if ((int)word.size() > max)
-        return false;
-
-    return true;
-}
-
-// prüft ob ein string nur aus buchstaben und zahlen besteht
-bool Message::isDigitLetterOnly(string word)
-{
-    for (int i = 0; i < (int)word.size(); i++)
-    {
-        if (!isdigit(word.at(i)) && !isalpha(word.at(i)))
-            return false;
-    }
-    return true;
-}
-
 void Message::loadMessage(std::string msgPath)
 {
     ifstream input_file(msgPath);
@@ -134,17 +107,13 @@ void Message::loadMessage(std::string msgPath)
     string currentLine;
 
     getline(input_file, currentLine);
-    char *end;
-    int number = strtol(currentLine.c_str(), &end, 10);
-    if (!setMessageNumber(number))
-        exitFailure("Ungültige MessageNumber: " + messageNumber);
 
     getline(input_file, currentLine);
     if (!setSender(currentLine))
         exitFailure("Ungültiger Sender: " + sender);
 
     getline(input_file, currentLine);
-    if (!setreceiver(currentLine))
+    if (!setReceiver(currentLine))
         exitFailure("Ungültiger Empfänger: " + receiver);
 
     getline(input_file, currentLine);
@@ -161,7 +130,7 @@ void Message::loadMessage(std::string msgPath)
 void Message::cleanMsg()
 {
     messageHead = "";
-    reciever = "";
+    receiver = "";
     subject = "";
     messageContent = "";
     messageNumber = -1;
@@ -175,8 +144,8 @@ void Message::createMsgString()
     if(sender != "")
         messageString += sender + "\n";
 
-    if(reciever != "")
-        messageString += reciever + "\n";
+    if(receiver != "")
+        messageString += receiver + "\n";
 
     if(subject != "")
         messageString += subject + "\n";
