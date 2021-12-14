@@ -67,3 +67,68 @@ void Client::setupSocket()
         exit(EXIT_FAILURE);
     }
 }
+
+void Client::userLogin()
+{
+    std::string s;
+
+    std::cout << "Username: ";
+    std::cin >> s;
+
+    while (!msg.setSender(s))
+    {
+        std::cout << "Ungültige Eingabe, versuch es erneut: ";
+        s = "";
+        std::cin >> s;
+    }
+}
+
+ClientOption Client::getOptions()
+{
+    char option;
+
+    std::cout << "Optionen: " << std::endl 
+    << "  (1) SEND" << std::endl 
+    << "  (2) LIST" << std::endl 
+    << "  (3) READ" << std::endl 
+    << "  (4) DEL" << std::endl 
+    << "  (5) QUIT" << std::endl 
+    << std::endl << "Deine Eingabe: ";
+
+    do
+    {
+        std::cin >> option;
+    }while(option < 49 || option > 53);
+
+    switch(option)
+    {
+        case '1':
+            return ClientOption.SEND;
+
+        case '2':
+            return ClientOption.LIST;
+        break;
+
+        case '3':
+            return ClientOption.READ;
+        break;
+
+        case '4':
+            return ClientOption.DEL;
+        break;
+
+        case '5':
+            return ClientOption.QUIT;
+        break;
+    }
+    return ClientOption.QUIT;
+}
+
+void Client::startOption(){
+
+}
+
+void Client::sendSend()
+{
+
+}

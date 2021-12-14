@@ -12,12 +12,18 @@
 #include <assert.h>
 #include <exception>
 #include <sstream>
+#include <message.h>
+#include "clientOptionEnum.h"
 
 class Client
 {
 public:
     void readInput(int argc, char *argv[]);
     void setupSocket();
+    void sendSend();
+    void userLogin();
+    ClientOption getOptions();
+    void startOption();
 
 private:
     void print_usage();
@@ -26,5 +32,6 @@ private:
     int socket_fd;
     int connectionCode;
     struct sockaddr_in server_addr;
+    Message msg;
 };
 #endif
