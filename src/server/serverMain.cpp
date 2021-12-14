@@ -11,7 +11,9 @@ int main(int argc, char *argv[])
     Database testDatabase;
 
     testDatabase.setDir("moin");
-    std::cout << testDatabase.getUsers()[0].getMessages()[0].getSubject() << std::endl;
+    testDatabase.sendMessage("meinem", "popo", "lasswaserleben", "heeyyyy");
+    std::cout << testDatabase.getUsers().back().getMessages().back().getSubject() << std::endl;
+    // std::cout << testDatabase.getUsers()[0].getMessages()[0].getSubject() << std::endl;
 
     server.listenToClient();
 }

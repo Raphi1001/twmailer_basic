@@ -6,6 +6,12 @@ Message::Message()
 {
 }
 
+bool Message::setMessageNumber(int number)
+{
+    this->messageNumber = number;
+    return true;
+}
+
 bool Message::setSender(string sender)
 {
     if (!checkMaxSize(sender, 8) || !isDigitLetterOnly(sender))
@@ -44,31 +50,31 @@ bool Message::setMessageContent(string messageContent)
 
 void Message::setMessageHead(SendOption messageHead)
 {
-    switch(messageHead)
+    switch (messageHead)
     {
-        case SEND:
-            this->messageHead = "SEND\n";
-            break;
+    case SEND:
+        this->messageHead = "SEND\n";
+        break;
 
-        case LIST:
-            this->messageHead = "LIST\n";
-            break;
+    case LIST:
+        this->messageHead = "LIST\n";
+        break;
 
-        case READ:
-            this->messageHead = "READ\n";
-            break;
+    case READ:
+        this->messageHead = "READ\n";
+        break;
 
-        case DEL:
-            this->messageHead = "DEL\n";
-            break;
+    case DEL:
+        this->messageHead = "DEL\n";
+        break;
 
-        case QUIT:
-            this->messageHead = "QUIT\n";
-            break;
+    case QUIT:
+        this->messageHead = "QUIT\n";
+        break;
 
-        default:
-            this->messageHead = "";
-            break;
+    default:
+        this->messageHead = "";
+        break;
     }
 }
 
@@ -80,7 +86,7 @@ std::string Message::getSender()
 {
     return sender;
 }
-std::string Message::getReciever()
+std::string Message::getReceiver()
 {
     return receiver;
 }
@@ -92,12 +98,13 @@ std::string Message::getMessageContent()
 {
     return messageContent;
 }
+
 std::string Message::getMessageString()
 {
     return messageString;
 }
 
-void Message::loadMessage(std::string msgPath)
+void Message::loadMessage(std::string msgPath, int number)
 {
     ifstream input_file(msgPath);
 
@@ -105,8 +112,6 @@ void Message::loadMessage(std::string msgPath)
         exitFailure("File konnte nicht geöffnet werden: " + msgPath);
 
     string currentLine;
-
-    getline(input_file, currentLine);
 
     getline(input_file, currentLine);
     if (!setSender(currentLine))
@@ -123,6 +128,8 @@ void Message::loadMessage(std::string msgPath)
     getline(input_file, currentLine);
     if (!setMessageContent(currentLine))
         exitFailure("Ungültige Nachricht: " + messageContent);
+
+    setMessageNumber(number);
 
     input_file.close();
 }
@@ -141,19 +148,19 @@ void Message::createMsgString()
 {
     messageString = messageHead;
 
-    if(sender != "")
+    if (sender != "")
         messageString += sender + "\n";
 
-    if(receiver != "")
+    if (receiver != "")
         messageString += receiver + "\n";
 
-    if(subject != "")
+    if (subject != "")
         messageString += subject + "\n";
 
-    if(messageContent != "")
+    if (messageContent != "")
         messageString += messageContent + "\n";
 
-    if(messageNumber != -1)
+    if (messageNumber != -1)
         messageString += to_string(messageNumber) + "\n";
 
     messageString += ".\n";

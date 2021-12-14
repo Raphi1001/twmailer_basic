@@ -37,10 +37,6 @@ private:
     void print_usage();
     void reciveClient();
 
-    bool sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
-    User listUserMessages();
-    Message readMessage();
-    bool deleteMessage();
     void quitClient(std::string client);
 };
 

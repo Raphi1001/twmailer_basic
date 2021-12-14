@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <filesystem>
+#include <fstream>
 #include <dirent.h>
 
 #include "user.h"
@@ -36,6 +37,13 @@ public:
     bool dirExists();
     bool dirIsEmpty();
     void loadDatabase();
-    void send();
+
+    void sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
+    User listUserMessages();
+    Message readMessage();
+    bool deleteMessage(std::string username, int msgNumber);
+
+    void createUser(std::string username);
+    Message createMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
 };
 #endif

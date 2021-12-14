@@ -9,9 +9,18 @@ void User::setUsername(std::string username)
     this->username = username;
 }
 
-void User::addMessage(Message msg)
+void User::addMessage(Message msg, string pathToMsg)
 {
     receivedMessages.push_back(msg);
+    fileCount++;
+
+    ofstream newMsg(pathToMsg);
+    newMsg << msg.getSender() << endl
+           << msg.getReceiver() << endl
+           << msg.getSubject() << endl
+           << msg.getMessageContent() << endl;
+
+    newMsg.close();
 }
 
 vector<Message> User::getMessages()
@@ -35,13 +44,13 @@ void User::loadUser(string username, string userDirectory)
 
     while ((direntp = readdir(dirp)) != NULL)
     {
-
         if (strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0) //"." und ".." Verzeichnisse überspringen
         {
             string filepath(userDirectory + "/" + direntp->d_name);
             Message newMsg;
-            newMsg.loadMessage(filepath);
-            addMessage(newMsg);
+            newMsg.loadMessage(filepath, fileCount);
+            receivedMessages.push_back(newMsg);
+            fileCount++;
         }
     }
     closedir(dirp);
