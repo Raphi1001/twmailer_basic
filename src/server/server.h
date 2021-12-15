@@ -34,11 +34,12 @@ private:
     int clientConnect;
     int clientList;
     struct sockaddr_in my_addr;
+    Database database;
 
     void print_usage();
     void reciveClient();
     void workWithMsgHead();
-    void sendAnswer(bool answer);   
+    void sendAnswer(bool answer);
 
     void quitClient(std::string client);
 };

@@ -66,6 +66,8 @@ void Server::readInput(int argc, char *argv[])
         print_usage();
         exit(EXIT_FAILURE);
     }
+
+    database.setDir(dir);
 }
 
 void Server::listenToClient()
@@ -90,14 +92,14 @@ void Server::listenToClient()
         snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
         write(clientConnect, dataSending, strlen(dataSending));
         sleep(1);
-        
-        while(clientConnect > 0)
+
+        while (clientConnect > 0)
         {
             msg.cleanMsg();
             reciveClient();
             workWithMsgHead();
         }
-        
+
         close(clientConnect);
     }
 }
@@ -108,7 +110,8 @@ void Server::reciveClient()
     std::string tmp;
 
     std::cout << "Warte auf Client send" << std::endl;
-    do{
+    do
+    {
         if ((rec = recv(clientConnect, dataReceiving, sizeof(dataReceiving), 0)) == -1)
         {
             std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
@@ -123,38 +126,61 @@ void Server::reciveClient()
         {
             tmp += dataReceiving;
         }
-    } 
-    while(rec == 2048);
+    } while (rec == 2048);
 
-    if(!msg.setMessageHead(tmp))
+    if (!msg.setMessageHead(tmp))
         close(clientConnect);
 }
 
-//nimmt keinen switch
+// nimmt keinen switch
 void Server::workWithMsgHead()
 {
-    if(msg.getMessageHead() == "SEND\n")
+    if (msg.getMessageHead() == "SEND\n")
     {
-        std::cout << "SENDFUNC" << std::endl;
+        if (database.sendMessage(msg.getSender(), msg.getReceiver(), msg.getSubject(), msg.getMessageContent()))
+        {
+            std::cout << "ok" << std::endl;
+            sendAnswer(true);
+        }
+        else
+        {
+            std::cout << "nicht ok" << std::endl;
+            sendAnswer(false);
+        }
+    }
+    else if (msg.getMessageHead() == "LIST\n")
+    {
+        database.getUser(msg.getReceiver())->getAllMessages();
         sendAnswer(true);
     }
-    else if(msg.getMessageHead() == "LIST\n")
+    else if (msg.getMessageHead() == "READ\n")
     {
-        std::cout << "LISTFUNC" << std::endl;
-        sendAnswer(true);
+        Message *answere = database.getUserMessage(msg.getReceiver(), msg.getMessageNumber());
+        if (answere)
+        {
+            // answere;
+        }
+        else
+        {
+            std::cout << "Fehler" << std::endl;
+            sendAnswer(false);
+        }
     }
-    else if(msg.getMessageHead() == "READ\n")
+    else if (msg.getMessageHead() == "DEL\n")
     {
-        std::cout << "READFUNC" << std::endl;
-        sendAnswer(true);
-    }
-    else if(msg.getMessageHead() == "DEL\n")
-    {
-        std::cout << "DELFUNC" << std::endl;
-        sendAnswer(false);
+        if (database.deleteUserMessage(msg.getReceiver(), msg.getMessageNumber()))
+        {
+            std::cout << "gelöscht" << std::endl;
+            sendAnswer(true);
+        }
+        else
+        {
+            std::cout << "nicht gelöscht" << std::endl;
+            sendAnswer(false);
+        }
     }
     else
-        close(clientConnect); 
+        close(clientConnect);
 }
 
 void Server::sendAnswer(bool answer)
@@ -165,14 +191,14 @@ void Server::sendAnswer(bool answer)
     int bytesleft = len;
     std::string answer_s;
 
-    if(answer)
+    if (answer)
         answer = "OK\n";
     else
         answer = "ERR\n";
 
     while (total < len)
     {
-        if((i = send(clientConnect , answer_s.c_str(), sizeof(answer_s), 0)) == -1)
+        if ((i = send(clientConnect, answer_s.c_str(), sizeof(answer_s), 0)) == -1)
         {
             std::cout << "Fehler beim senden!" << std::endl;
             exit(EXIT_FAILURE);
