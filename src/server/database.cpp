@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// Erstellt das mail-spool-directory falls es noch nicht existiert
 void Database::setDir(string dirName)
 {
     this->dir = dirName;
@@ -15,6 +16,7 @@ void Database::setDir(string dirName)
         loadDatabase();
 }
 
+// Fügt dem users Vektor einen User hinzu
 void Database::addUser(User user)
 {
     for (int i = 0; i < (int)users.size(); i++)
@@ -28,6 +30,7 @@ void Database::addUser(User user)
     users.push_back(user);
 }
 
+// Erstellt einen User und dessen directoy im mail-spool-directory
 bool Database::addNewUser(User *newUser, std::string username)
 {
     // username hinzufügen
@@ -50,6 +53,7 @@ vector<User> Database::getAllUsers()
     return users;
 }
 
+// sucht einen bestimmten user und gibt diesen zurück
 User *Database::getUser(string username)
 {
     for (int i = 0; i < (int)users.size(); ++i)
@@ -62,13 +66,16 @@ User *Database::getUser(string username)
     return nullptr;
 }
 
+// sucht eine bestimmte nachricht von einem bestimmten user und gibt diese zurück
 Message *Database::getUserMessage(string username, int msgNumber)
 {
+    //überprüng ob der user exisitert
     User *foundUser = getUser(username);
 
     if (foundUser == nullptr)
         return nullptr;
 
+    //überprüfung ob die nachricht existert
     Message *foundMessage = foundUser->getMessage(msgNumber);
     if (foundMessage == nullptr)
         return nullptr;
@@ -76,6 +83,7 @@ Message *Database::getUserMessage(string username, int msgNumber)
     return foundMessage;
 }
 
+// prüft pb das mail-spool-directory existert
 bool Database::dirExists()
 {
     struct stat st = {0};
@@ -86,6 +94,7 @@ bool Database::dirExists()
     return true;
 }
 
+// prüft ob das mail-spool-directory leer ist
 bool Database::dirIsEmpty()
 {
     const filesystem::path dirPath{dir};
@@ -103,6 +112,7 @@ void Database::loadDatabase()
     if (!dirp)
         exitFailure("Ungültige Datenbank. Directory konnte nicht geöffnet werden: " + dir);
 
+    // ließt jedes user directory einzeln
     while ((direntp = readdir(dirp)) != NULL)
     {
         if (strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0) //"." und ".." Verzeichnisse überspringen
@@ -111,6 +121,7 @@ void Database::loadDatabase()
     closedir(dirp);
 }
 
+// Läd alle nachrichten von einem user
 void Database::loadUser(string username)
 {
     User newUser;
@@ -122,6 +133,7 @@ void Database::loadUser(string username)
     if (!dirp)
         exitFailure("Ungültige Datenbank. Directory konnte nicht geöffnet werden: " + userDirectory);
 
+    // ließt jede nachricht einzel
     while ((direntp = readdir(dirp)) != NULL)
     {
         if (strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0) //"." und ".." Verzeichnisse überspringen
@@ -134,44 +146,32 @@ void Database::loadUser(string username)
     addUser(newUser);
 }
 
+// verschickt eine nachricht von einem user an einen andern
 bool Database::sendMessage(string sender, string receiver, string subject, string messageContent)
 {
     User newUser;
-    User *existingUser = getUser(receiver);
+    User *existingUser = getUser(receiver); // prüft ob der Empfänger bereits existiert
     User *user = existingUser;
 
     if (!existingUser)
     {
-        addNewUser(&newUser, receiver);
+        addNewUser(&newUser, receiver); // erstellt einen neuen user, falls es ihn noch nicht gibt
         user = &newUser;
     }
 
     if (!user)
         return false; // ungültiger user
 
-    if (!addMessageToUser(user, sender, receiver, subject, messageContent))
+    if (!addMessageToUser(user, sender, receiver, subject, messageContent)) // fügt dem Empfänger die Nachricht hinzu
         return false;
 
     if (!existingUser)
-        addUser(newUser);
+        addUser(newUser); // speichert neuen user
 
     return true;
 }
 
-User *Database::sendMessageToExistingUser(string username)
-{
-    // add message to existing user
-    for (int i = 0; i < (int)users.size(); i++)
-    {
-        if (username == users[i].getUsername())
-        {
-
-            return &users[i];
-        }
-    }
-    return nullptr;
-}
-
+// fügt einem user eine nachricht bei
 bool Database::addMessageToUser(User *user, string sender, string receiver, string subject, string messageContent)
 {
     string newPath(dir + "/" + user->getUsername() + "/" + getCurrentTime() + ".txt");
@@ -181,20 +181,22 @@ bool Database::addMessageToUser(User *user, string sender, string receiver, stri
     return true;
 }
 
+// löscht bestimmte nachricht von bestimmtem user
 bool Database::deleteUserMessage(string username, int msgNumber)
 {
-    User *foundUser = getUser(username);
+    User *foundUser = getUser(username); // prüft ob user existert
 
     if (foundUser == nullptr)
         return false;
 
     string userDirectory(dir + "/" + foundUser->getUsername());
-    if (!foundUser->deleteMessage(msgNumber, userDirectory))
+    if (!foundUser->deleteMessage(msgNumber, userDirectory)) // prüft ob nachricht gelöscht wurde
         return false;
 
     return true;
 }
 
+// gibt alle user und ihre nachrichten aus
 void Database::printAllUsers()
 {
     for (int i = 0; i < (int)users.size(); ++i)

@@ -23,7 +23,6 @@ private:
     std::vector<User> users;
 
     bool addMessageToUser(User *user, std::string sender, std::string receiver, std::string subject, std::string messageContent);
-    User *sendMessageToExistingUser(std::string username);
 
 public:
     /* SETTER */
