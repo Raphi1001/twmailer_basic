@@ -134,14 +134,51 @@ void Server::reciveClient()
 void Server::workWithMsgHead()
 {
     if(msg.getMessageHead() == "SEND\n")
+    {
         std::cout << "SENDFUNC" << std::endl;
+        sendAnswer(true);
+    }
     else if(msg.getMessageHead() == "LIST\n")
+    {
         std::cout << "LISTFUNC" << std::endl;
+        sendAnswer(true);
+    }
     else if(msg.getMessageHead() == "READ\n")
+    {
         std::cout << "READFUNC" << std::endl;
+        sendAnswer(true);
+    }
     else if(msg.getMessageHead() == "DEL\n")
+    {
         std::cout << "DELFUNC" << std::endl;
+        sendAnswer(false);
+    }
     else
         close(clientConnect); 
 }
 
+void Server::sendAnswer(bool answer)
+{
+    int i;
+    int total = 0;
+    int len = (int)sizeof(msg.getMessageString()) + 1;
+    int bytesleft = len;
+    std::string answer_s;
+
+    if(answer)
+        answer = "OK\n";
+    else
+        answer = "ERR\n";
+
+    while (total < len)
+    {
+        if((i = send(clientConnect , answer_s.c_str(), sizeof(answer_s), 0)) == -1)
+        {
+            std::cout << "Fehler beim senden!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        total += i;
+        bytesleft -= i;
+    }
+    i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
+}
