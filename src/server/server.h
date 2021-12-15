@@ -38,6 +38,7 @@ private:
     void print_usage();
     void reciveClient();
     void workWithMsgHead();
+    void sendAnswer(bool answer);   
 
     void quitClient(std::string client);
 };
