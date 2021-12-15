@@ -44,7 +44,7 @@ bool Message::setMessageContent(string messageContent)
     if (!hasNoBackSlash(messageContent))
         return false;
 
-    if (messageContent.substr(messageContent.size() - 3) != "\n.\n")
+    if (messageContent.size() < 3 || messageContent.substr(messageContent.size() - 3) != "\n.\n")
     {
         return false;
     }
