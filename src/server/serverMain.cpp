@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     Database testDatabase;
 
     testDatabase.setDir("moin");
+
     ////DELETE////
     /*if (testDatabase.deleteUserMessage("popo", 2))
         std::cout << "gelöscht" << std::endl;
@@ -27,13 +28,12 @@ int main(int argc, char *argv[])
     */
     //// READ
     /*
-    Message *testMessage = testDatabase.getUserMessage("popo", 3);
+    Message *testMessage = testDatabase.getUserMessage("harry123", 0);
     if (testMessage)
         std::cout << testMessage->getSubject() << std::endl;
     else
         std::cout << "Fehler" << std::endl;
     */
-
     //// LIST
     /*
     testDatabase.getUser("popo");

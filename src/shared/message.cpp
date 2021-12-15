@@ -32,7 +32,7 @@ bool Message::setReceiver(string receiver)
 
 bool Message::setSubject(string subject)
 {
-    if (!checkMaxSize(subject, 80) || !isDigitLetterSpaceOnly(subject))
+    if (!checkMaxSize(subject, 80) || !hasNoBackSlash(subject))
         return false;
 
     this->subject = subject;
@@ -41,7 +41,7 @@ bool Message::setSubject(string subject)
 
 bool Message::setMessageContent(string messageContent)
 {
-    if (!isDigitLetterSpaceOnly(messageContent))
+    if (!hasNoBackSlash(messageContent))
         return false;
 
     this->messageContent = messageContent;
@@ -80,7 +80,7 @@ void Message::setMessageHead(SendOption messageHead)
 
 bool Message::setMessageHead(std::string messageHead)
 {
-    if(messageHead != "SEND\n" && messageHead != "LIST\n" && messageHead != "READ\n" && messageHead != "DEL\n" && messageHead != "QUIT\n")
+    if (messageHead != "SEND\n" && messageHead != "LIST\n" && messageHead != "READ\n" && messageHead != "DEL\n" && messageHead != "QUIT\n")
         return false;
     this->messageHead = messageHead;
     return true;
