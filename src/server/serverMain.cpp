@@ -20,12 +20,12 @@ int main(int argc, char *argv[])
     */
 
     /// SEND
-    /*
-        if (testDatabase.sendMessage("harry", "po", "Geburtstagspartyyyy", "Ichliebediir"))
-            std::cout << "ok" << std::endl;
-        else
-            std::cout << "nicht ok" << std::endl;
-    */
+
+    if (testDatabase.sendMessage("harry", "po", "Geburtstagspartyyyy", "Ichliebediir\n weil du geil bist \n lass uns tanzen und. springen\n.\n"))
+        std::cout << "ok" << std::endl;
+    else
+        std::cout << "nicht ok" << std::endl;
+
     //// READ
     /*
     Message *testMessage = testDatabase.getUserMessage("harry123", 0);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     /*
     testDatabase.getUser("popo");
     */
-    testDatabase.printAllUsers();
+    // testDatabase.printAllUsers();
 
     server.listenToClient();
 }
