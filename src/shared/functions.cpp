@@ -40,6 +40,16 @@ bool isDigitLetterSpaceOnly(string str)
     return true;
 }
 
+// prüft ob ein string ein backslash enthaelt
+bool hasNoBackSlash(string str)
+{
+    size_t found = str.find("\\");
+    if (found == string::npos)
+        return true;
+
+    return false;
+}
+
 string getCurrentTime()
 {
     auto timeStamp = chrono::system_clock::now();

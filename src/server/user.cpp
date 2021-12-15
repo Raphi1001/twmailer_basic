@@ -88,8 +88,24 @@ void User::loadMessage(string filepath)
 
     if (!getline(input_file, currentLine).good())
         exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
-    if (!newMessage.setMessageContent(currentLine))
-        exitFailure("Ungültige Datenbank. Ungültige Nachricht: " + currentLine + ", File: " + filepath);
+
+    string message = "";
+    bool messageEnd = false;
+    while (getline(input_file, currentLine).good())
+    {
+        message.append(currentLine + '\n');
+
+        if (message.substr(message.size() - 3) == "\n.\n")
+        {
+            messageEnd = true;
+            break;
+        }
+    }
+
+    if (!messageEnd)
+        exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
+    if (!newMessage.setMessageContent(message))
+        exitFailure("Ungültige Datenbank. Ungültige Nachricht: " + message + ", File: " + filepath);
 
     input_file.close();
 

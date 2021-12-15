@@ -32,7 +32,7 @@ bool Message::setReceiver(string receiver)
 
 bool Message::setSubject(string subject)
 {
-    if (!checkMaxSize(subject, 80) || !isDigitLetterSpaceOnly(subject))
+    if (!checkMaxSize(subject, 80) || !hasNoBackSlash(subject))
         return false;
 
     this->subject = subject;
@@ -41,7 +41,7 @@ bool Message::setSubject(string subject)
 
 bool Message::setMessageContent(string messageContent)
 {
-    if (!isDigitLetterSpaceOnly(messageContent))
+    if (!hasNoBackSlash(messageContent))
         return false;
 
     this->messageContent = messageContent;
