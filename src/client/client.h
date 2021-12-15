@@ -22,6 +22,7 @@ class Client
         SendOption getOptions();
         void startOption(SendOption input);
         void userLogin();
+        void waitServerRespons();
 
         int getSocket_fd(){return socket_fd;}
 
@@ -32,14 +33,14 @@ private:
     void sendServer();
     void setSEND();
     void setMsgNrClient();
-    void waitServerRespons();
+    void waitServerResponsList();
 
     std::string ip_s;
     uint16_t port;
     int n;
     int socket_fd;
     int connectionCode;
-    char dataSending[2048] = "Test";
+    char dataReceiving[2048];
     struct sockaddr_in server_addr;
     Message msg;
 };

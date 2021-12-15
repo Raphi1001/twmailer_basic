@@ -87,10 +87,12 @@ void Server::listenToClient()
         }
 
         std::cout << "Server und Client wurden erfolgreich verbunden!" << std::endl;
-        // snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
-        // write(clientConnect, dataSending, strlen(dataSending));
+        snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
+        write(clientConnect, dataSending, strlen(dataSending));
+        
+        close(clientConnect);
 
-        reciveClient();
+        //reciveClient();
     }
 }
 
