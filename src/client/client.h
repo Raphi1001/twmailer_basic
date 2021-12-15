@@ -16,16 +16,15 @@
 
 class Client
 {
-    public:
-        void readInput(int argc, char *argv[]);
-        void setupSocket();
-        SendOption getOptions();
-        void startOption(SendOption input);
-        void userLogin();
-        void waitServerRespons();
+public:
+    void readInput(int argc, char *argv[]);
+    void setupSocket();
+    SendOption getOptions();
+    void startOption(SendOption input);
+    void userLogin();
+    void waitServerRespons();
 
-        int getSocket_fd(){return socket_fd;}
-
+    int getSocket_fd() { return socket_fd; }
 
 private:
     void print_usage();
@@ -33,7 +32,6 @@ private:
     void sendServer();
     void setSEND();
     void setMsgNrClient();
-    void waitServerResponsList();
 
     std::string ip_s;
     uint16_t port;

@@ -89,38 +89,57 @@ void Server::listenToClient()
         std::cout << "Server und Client wurden erfolgreich verbunden!" << std::endl;
         snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
         write(clientConnect, dataSending, strlen(dataSending));
+        sleep(1);
+        
+        while(clientConnect > 0)
+        {
+            msg.cleanMsg();
+            reciveClient();
+            workWithMsgHead();
+        }
         
         close(clientConnect);
-
-        //reciveClient();
     }
 }
 
-void Server::reciveClient() //funktioniert nicht richtig!!!!
+void Server::reciveClient()
 {
     int rec;
+    std::string tmp;
 
     std::cout << "Warte auf Client send" << std::endl;
+    do{
+        if ((rec = recv(clientConnect, dataReceiving, sizeof(dataReceiving), 0)) == -1)
+        {
+            std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
+            break;
+        }
+        else if (rec == 0)
+        {
+            std::cout << "Remote socket wurde geschlossen" << std::endl;
+            break;
+        }
+        else
+        {
+            tmp += dataReceiving;
+        }
+    } 
+    while(rec == 2048);
 
-    while (dataReceivedString.back() != '\n' && dataReceivedString.back()-1 != '.' && dataReceivedString.back()-2 != '\n' )
-    {  
-        do{
-            if ((rec = recv(clientConnect, &dataReceived[0], dataReceived.size(), 0)) == -1)
-            {
-                std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
-                exit(EXIT_FAILURE);
-            }
-            else if (rec == 0)
-            {
-                std::cout << "Remote socket wurde geschlossen" << std::endl;
-            }
-            else
-            {
-                dataReceivedString.append(dataReceived.cbegin(), dataReceived.cend());
-            }
-        } while(rec == 2048 && (dataReceivedString.back() != '\n' && dataReceivedString.back()-1 != '.' && dataReceivedString.back()-2 != '\n'));
-        std::cout << dataReceivedString << "-!-" << std::endl;
-    }
+    if(!msg.setMessageHead(tmp))
+        close(clientConnect);
+}
 
-    std::cout << dataReceivedString << "-!-" << std::endl;
+void Server::workWithMsgHead()
+{
+    if(msg.getMessageHead() == "SEND\n")
+        std::cout << "SENDFUNC";
+    else if(msg.getMessageHead() == "LIST\n")
+        std::cout << "LISTFUNC";
+    else if(msg.getMessageHead() == "READ\n")
+        std::cout << "READFUNC";
+    else if(msg.getMessageHead() == "DEL\n")
+        std::cout << "DELFUNC";
+    else
+        close(clientConnect); 
 }

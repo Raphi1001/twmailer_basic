@@ -17,8 +17,6 @@
 #include "user.h"
 #include "../shared/message.h"
 
-static std::vector<char> dataReceived(2048);
-
 class Server
 {
 public:
@@ -29,8 +27,9 @@ public:
 private:
     uint16_t port;
     std::string dir;
+    Message msg;
     char dataSending[2048];
-    std::string dataReceivedString;
+    char dataReceiving[2048];
     int connectionCode;
     int clientConnect;
     int clientList;
@@ -38,6 +37,7 @@ private:
 
     void print_usage();
     void reciveClient();
+    void workWithMsgHead();
 
     void quitClient(std::string client);
 };
