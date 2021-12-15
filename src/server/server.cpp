@@ -130,16 +130,18 @@ void Server::reciveClient()
         close(clientConnect);
 }
 
+//nimmt keinen switch
 void Server::workWithMsgHead()
 {
     if(msg.getMessageHead() == "SEND\n")
-        std::cout << "SENDFUNC";
+        std::cout << "SENDFUNC" << std::endl;
     else if(msg.getMessageHead() == "LIST\n")
-        std::cout << "LISTFUNC";
+        std::cout << "LISTFUNC" << std::endl;
     else if(msg.getMessageHead() == "READ\n")
-        std::cout << "READFUNC";
+        std::cout << "READFUNC" << std::endl;
     else if(msg.getMessageHead() == "DEL\n")
-        std::cout << "DELFUNC";
+        std::cout << "DELFUNC" << std::endl;
     else
         close(clientConnect); 
 }
+

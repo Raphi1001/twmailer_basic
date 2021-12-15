@@ -112,6 +112,11 @@ std::vector<std::string> Message::getMessageString()
     return messageString;
 }
 
+std::string Message::getMessageHead()
+{
+    return messageHead;
+}
+
 void Message::cleanMsg()
 {
     messageHead = "";
