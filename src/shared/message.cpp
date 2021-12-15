@@ -104,36 +104,6 @@ std::vector<std::string> Message::getMessageString()
     return messageString;
 }
 
-void Message::loadMessage(std::string msgPath, int number)
-{
-    ifstream input_file(msgPath);
-
-    if (!input_file.is_open())
-        exitFailure("File konnte nicht geöffnet werden: " + msgPath);
-
-    string currentLine;
-
-    getline(input_file, currentLine);
-    if (!setSender(currentLine))
-        exitFailure("Ungültiger Sender: " + sender);
-
-    getline(input_file, currentLine);
-    if (!setReceiver(currentLine))
-        exitFailure("Ungültiger Empfänger: " + receiver);
-
-    getline(input_file, currentLine);
-    if (!setSubject(currentLine))
-        exitFailure("Ungültiger Betreff: " + currentLine);
-
-    getline(input_file, currentLine);
-    if (!setMessageContent(currentLine))
-        exitFailure("Ungültige Nachricht: " + messageContent);
-
-    setMessageNumber(number);
-
-    input_file.close();
-}
-
 void Message::cleanMsg()
 {
     messageHead = "";

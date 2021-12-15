@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     /*if (testDatabase.deleteUserMessage("popo", 2))
         std::cout << "gelöscht" << std::endl;
          else
-        std::cout << "gelöscht" << std::endl;
+        std::cout << "nicht gelöscht" << std::endl;
     */
 
     /// SEND
