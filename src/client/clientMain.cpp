@@ -8,9 +8,10 @@ int main(int argc, char *argv[])
 
     client.readInput(argc, argv);
     client.setupSocket();
+    client.waitServerRespons();
 
     client.userLogin();
-    while ((input = client.getOptions()) != QUIT || client.getSocket_fd() < 1)
+    while (client.getSocket_fd() < 1 || (input = client.getOptions()) != QUIT)
     {
         client.startOption(input);
     }

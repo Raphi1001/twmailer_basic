@@ -139,7 +139,7 @@ void Client::startOption(SendOption input)
             msg.setMessageHead(LIST);
             msg.createMsgString();
             sendServer();
-            waitServerRespons();
+            waitServerResponsList();
             break;
 
         case READ:
@@ -168,13 +168,36 @@ void Client::startOption(SendOption input)
 
 void Client::waitServerRespons()
 {
-    unsigned int len;
-    unsigned int data_receive;
+    int i = 0;
 
-    data_receive = recv(socket_fd, &len, 4080, 0);
+    std::cout << "Warte auf Server response" << std::endl;
+
+    while((i = read(socket_fd, dataReceiving, sizeof(dataReceiving)-1)) > 0)
+    {
+        dataReceiving[i] = 0;
+        if(fputs(dataReceiving, stdout) == EOF)
+            std::cout << "Standard output error";
+    }
+    
+    if(i < 0)
+    {
+        std::cout << "Standard output error";
+    }else
+    
+    std::cout << std::endl;
+}
+
+void Client::waitServerResponsList()
+{
+    int len;
+    int data_receive;
+
+    std::cout << "Warte auf Server response" << std::endl;
+
+    data_receive = recv(socket_fd, &len, 10, 0);
 
     std::vector<wchar_t> input(len+1);
-    if((data_receive = recv(socket_fd, input.data(), len, 0)) != (unsigned int)-1)
+    if((data_receive = recv(socket_fd, input.data(), len, 0)) != -1)
     {
         for(auto &element : input)
             std::cout << element;
@@ -188,6 +211,8 @@ void Client::waitServerRespons()
 void Client::setSEND()
 {
     std::string tmp;
+
+    msg.setMessageHead(SEND);
 
     std::cout << "Empfänger: ";
     std::getline(std::cin , tmp);
@@ -264,6 +289,5 @@ void Client::sendServer()
             bytesleft -= i;
         }
     }
-
-    std::cout << "Senden war erfolgreich!" << std::endl;
+    i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
 }
