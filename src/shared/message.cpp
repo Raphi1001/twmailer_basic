@@ -32,7 +32,7 @@ bool Message::setReceiver(string receiver)
 
 bool Message::setSubject(string subject)
 {
-    if (!checkMaxSize(subject, 80) || !isDigitLetterOnly(subject))
+    if (!checkMaxSize(subject, 80) || !isDigitLetterSpaceOnly(subject))
         return false;
 
     this->subject = subject;
@@ -41,7 +41,7 @@ bool Message::setSubject(string subject)
 
 bool Message::setMessageContent(string messageContent)
 {
-    if (!isDigitLetterOnly(messageContent))
+    if (!isDigitLetterSpaceOnly(messageContent))
         return false;
 
     this->messageContent = messageContent;
@@ -99,7 +99,7 @@ std::string Message::getMessageContent()
     return messageContent;
 }
 
-std::string Message::getMessageString()
+std::vector<std::string> Message::getMessageString()
 {
     return messageString;
 }
@@ -141,27 +141,28 @@ void Message::cleanMsg()
     subject = "";
     messageContent = "";
     messageNumber = -1;
-    messageString = "";
+    messageString.clear();
 }
 
 void Message::createMsgString()
 {
-    messageString = messageHead;
+    messageString.push_back(messageHead);
 
     if (sender != "")
-        messageString += sender + "\n";
+        messageString.push_back(sender + "\n");
 
     if (receiver != "")
-        messageString += receiver + "\n";
+        messageString.push_back(receiver + "\n");
 
     if (subject != "")
-        messageString += subject + "\n";
+        messageString.push_back(subject + "\n");
 
     if (messageContent != "")
-        messageString += messageContent + "\n";
+        messageString.push_back(messageContent + "\n");
 
     if (messageNumber != -1)
-        messageString += to_string(messageNumber) + "\n";
+        messageString.push_back(to_string(messageNumber) + "\n");
 
-    messageString += ".\n";
+    if (messageHead == "SEND\n")
+        messageString.push_back(".\n");
 }

@@ -87,29 +87,38 @@ void Server::listenToClient()
         }
 
         std::cout << "Server und Client wurden erfolgreich verbunden!" << std::endl;
-        snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
-        write(clientConnect, dataSending, strlen(dataSending));
+        // snprintf(dataSending, sizeof(dataSending), "Du wurdest erfolgreich verbunden!\n");
+        // write(clientConnect, dataSending, strlen(dataSending));
 
         reciveClient();
     }
 }
 
-void Server::reciveClient()
+void Server::reciveClient() //funktioniert nicht richtig!!!!
 {
     int rec;
 
     std::cout << "Warte auf Client send" << std::endl;
 
-    if ((rec = recv(clientConnect, dataReceived, sizeof(dataReceived), 0)) == -1)
-    {
-        std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    else if (rec == 0)
-    {
-        std::cout << "Remote socket wurde geschlossen" << std::endl;
+    while (dataReceivedString.back() != '\n' && dataReceivedString.back()-1 != '.' && dataReceivedString.back()-2 != '\n' )
+    {  
+        do{
+            if ((rec = recv(clientConnect, &dataReceived[0], dataReceived.size(), 0)) == -1)
+            {
+                std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            else if (rec == 0)
+            {
+                std::cout << "Remote socket wurde geschlossen" << std::endl;
+            }
+            else
+            {
+                dataReceivedString.append(dataReceived.cbegin(), dataReceived.cend());
+            }
+        } while(rec == 2048 && (dataReceivedString.back() != '\n' && dataReceivedString.back()-1 != '.' && dataReceivedString.back()-2 != '\n'));
+        std::cout << dataReceivedString << "-!-" << std::endl;
     }
 
-    dataReceived[rec] = '\n';
-    std::cout << dataReceived << "-!-" << std::endl;
+    std::cout << dataReceivedString << "-!-" << std::endl;
 }

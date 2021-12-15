@@ -28,3 +28,14 @@ bool isDigitLetterOnly(string str)
     }
     return true;
 }
+
+// prüft ob ein string nur aus buchstaben, zahlen und Space besteht
+bool isDigitLetterSpaceOnly(string str)
+{
+    for (int i = 0; i < (int)str.size(); i++)
+    {
+        if (!isdigit(str.at(i)) && !isalpha(str.at(i)) && str.at(i) != ' ')
+            return false;
+    }
+    return true;
+}

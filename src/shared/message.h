@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "functions.h"
 #include "SendOptionEnum.h"
@@ -17,7 +18,7 @@ private:
     std::string subject;
     std::string messageContent;
     std::string messageHead;
-    std::string messageString;
+    std::vector<std::string> messageString;
 
 public:
     /* SETTER */
@@ -35,7 +36,7 @@ public:
     std::string getSubject();
     std::string getMessageContent();
     std::string getMessageHead();
-    std::string getMessageString();
+    std::vector<std::string> getMessageString();
 
     /* FUNC */
     void loadMessage(std::string msgPath, int number);

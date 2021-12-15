@@ -73,13 +73,13 @@ void Client::userLogin()
     std::string s;
 
     std::cout << "Username: ";
-    std::cin >> s;
+    std::getline(std::cin , s);
 
     while (!msg.setSender(s))
     {
         std::cout << "Ungültige Eingabe, keine Sonderzeichen und weniger als 8 Zeichen: ";
         s = "";
-        std::cin >> s;
+        std::getline(std::cin , s);
     }
 }
 
@@ -95,12 +95,12 @@ SendOption Client::getOptions()
     << "  (4) DEL" << std::endl 
     << "  (5) QUIT" << std::endl 
     << std::endl << "Deine Eingabe: ";
-    std::cin >> option;
+    std::getline(std::cin , option);
 
     while( option.length() != 1 || option[0] < 49 || option[0] > 53)
     {
         std::cout << "Keine Gültige Option: ";
-        std::cin >> option;
+        std::getline(std::cin , option);
     }
     
     switch(option[0])
@@ -131,27 +131,58 @@ void Client::startOption(SendOption input)
     {
         case SEND:
             setSEND();
+            msg.createMsgString();
+            sendServer();
             break;
 
         case LIST:
-            setLIST();
+            msg.setMessageHead(LIST);
+            msg.createMsgString();
+            sendServer();
+            waitServerRespons();
             break;
 
         case READ:
-            setREAD();
+            msg.setMessageHead(READ);
+            setMsgNrClient();
+            msg.createMsgString();
+            sendServer();
+            waitServerRespons();
             break;
 
         case DEL:
-            setDEL();
+            msg.setMessageHead(DEL);
+            setMsgNrClient();
+            msg.createMsgString();
+            sendServer();
+            waitServerRespons();
             break;
 
         case QUIT:
-            setQUIT();
+            msg.setMessageHead(QUIT);
+            msg.createMsgString();
+            sendServer();
             break;
     }
+}
 
-    msg.createMsgString();
-    sendServer();
+void Client::waitServerRespons()
+{
+    unsigned int len;
+    unsigned int data_receive;
+
+    data_receive = recv(socket_fd, &len, 4080, 0);
+
+    std::vector<wchar_t> input(len+1);
+    if((data_receive = recv(socket_fd, input.data(), len, 0)) != (unsigned int)-1)
+    {
+        for(auto &element : input)
+            std::cout << element;
+    }
+    else
+    {
+        std::cout << "Es ist ein Fehler beim laden der Liste aufgetreten!" << std::endl;
+    }
 }
 
 void Client::setSEND()
@@ -159,93 +190,80 @@ void Client::setSEND()
     std::string tmp;
 
     std::cout << "Empfänger: ";
-    std::cin >> tmp;
+    std::getline(std::cin , tmp);
     while(!msg.setReceiver(tmp))
     {
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
-        std::cin >> tmp;
+        std::getline(std::cin , tmp);
     }
 
     tmp = "";
 
     std::cout << "Betreff: ";
-    std::cin >> tmp;
+    std::getline(std::cin , tmp);
     while(!msg.setSubject(tmp))
     {
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
-        std::cin >> tmp;
+        std::getline(std::cin , tmp);
     }
 
     tmp = "";
 
     std::cout << "Nachricht: ";
-    std::cin >> tmp;
+    std::getline(std::cin , tmp);
     while(!msg.setMessageContent(tmp))
     {
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
-        std::cin >> tmp;
+        std::getline(std::cin , tmp);
     }
 }
 
-void Client::setLIST()
+void Client::setMsgNrClient()
 {
+    std::string tmp;
+    bool isValid = false;
 
-}
-
-void Client::setREAD()
-{
-
-}
-
-void Client::setDEL()
-{
-
-}
-
-void Client::setQUIT()
-{
-    
+    std::cout << "NachrichtenNr: ";
+    std::getline(std::cin , tmp);
+    while(!isValid)
+    {
+        try
+        {
+            while(!msg.setMessageNumber(stoi(tmp)))
+            {
+                std::cout << "Ungültige Eingabe, versuche es erneut: ";
+                std::getline(std::cin , tmp);
+            }
+            isValid = true;
+        }
+        catch(...)
+        {
+            
+        }
+    }
 }
 
 void Client::sendServer()
 {   
-    int i;
-    int total = 0;
-    int len = (int)sizeof(msg.getMessageString()) + 1;
-    int bytesleft = len;
+    int i, total, len, bytesleft;
 
-    while (total < len)
+    for( auto &elem : msg.getMessageString())
     {
-        if((i = send(socket_fd, msg.getMessageContent().c_str(), sizeof(msg.getSender()), 0)) == -1)
+        total = 0;
+        len = (int)sizeof(msg.getMessageString()) + 1;
+        bytesleft = len;
+
+        while (total < len)
         {
-            std::cout << "Fehler beim senden!" << std::endl;
-            exit(EXIT_FAILURE);
+            if((i = send(socket_fd,elem.c_str(), sizeof(elem), 0)) == -1)
+            {
+                std::cout << "Fehler beim senden!" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            total += i;
+            bytesleft -= i;
         }
-        total += i;
-        bytesleft -= i;
     }
 
-    n == -1 ? std::cout << "Fehler beim senden!" : std::cout << "Senden war erfolgreich";
-    std::cout << std::endl;
-}
-
-void Client::readServer()
-{
-    int total = 0;
-    int i;
-    int len = (int)sizeof(dataSending) + 1;
-    int bytesleft = len;
-
-    while (total < len)
-    {
-        send(socket_fd, msg.getSender().c_str(), sizeof(msg.getSender()), 0);
-
-        if((i = send(socket_fd, dataSending+total, bytesleft, 0)) == -1)
-        {
-            std::cout << "Fehler beim senden!" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        total += i;
-        bytesleft -= i;
-    }
+    std::cout << "Senden war erfolgreich!" << std::endl;
 }

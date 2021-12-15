@@ -114,7 +114,7 @@ Message Database::createMessage(std::string sender, std::string receiver, std::s
 
 bool Database::deleteMessage(string username, int msgNumber)
 {
-    for (int i = 0; i < users.size(); ++i)
+    for (int i = 0; i < (int)users.size(); ++i)
     {
         if (username == users[i].getUsername())
         {
