@@ -78,6 +78,14 @@ void Message::setMessageHead(SendOption messageHead)
     }
 }
 
+bool Message::setMessageHead(std::string messageHead)
+{
+    if(messageHead != "SEND\n" && messageHead != "LIST\n" && messageHead != "READ\n" && messageHead != "DEL\n" && messageHead != "QUIT\n")
+        return false;
+    this->messageHead = messageHead;
+    return true;
+}
+
 int Message::getMessageNumber()
 {
     return messageNumber;

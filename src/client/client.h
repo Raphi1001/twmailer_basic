@@ -33,7 +33,6 @@ private:
     void sendServer();
     void setSEND();
     void setMsgNrClient();
-    void waitServerResponsList();
 
     std::string ip_s;
     uint16_t port;

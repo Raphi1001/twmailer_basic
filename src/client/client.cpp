@@ -139,7 +139,7 @@ void Client::startOption(SendOption input)
             msg.setMessageHead(LIST);
             msg.createMsgString();
             sendServer();
-            waitServerResponsList();
+            waitServerRespons();
             break;
 
         case READ:
@@ -172,39 +172,23 @@ void Client::waitServerRespons()
 
     std::cout << "Warte auf Server response" << std::endl;
 
-    while((i = read(socket_fd, dataReceiving, sizeof(dataReceiving)-1)) > 0)
+    do
     {
+        i = recv(socket_fd, dataReceiving, sizeof(dataReceiving)-1, 0);
         dataReceiving[i] = 0;
         if(fputs(dataReceiving, stdout) == EOF)
+        {
             std::cout << "Standard output error";
+            break;
+        }
+        if(dataReceiving[i] == '\n')
+            break;
     }
+    while(i == 2048);
     
     if(i < 0)
     {
-        std::cout << "Standard output error";
-    }else
-    
-    std::cout << std::endl;
-}
-
-void Client::waitServerResponsList()
-{
-    int len;
-    int data_receive;
-
-    std::cout << "Warte auf Server response" << std::endl;
-
-    data_receive = recv(socket_fd, &len, 10, 0);
-
-    std::vector<wchar_t> input(len+1);
-    if((data_receive = recv(socket_fd, input.data(), len, 0)) != -1)
-    {
-        for(auto &element : input)
-            std::cout << element;
-    }
-    else
-    {
-        std::cout << "Es ist ein Fehler beim laden der Liste aufgetreten!" << std::endl;
+        std::cout << "Standard output error" << std::endl;
     }
 }
 

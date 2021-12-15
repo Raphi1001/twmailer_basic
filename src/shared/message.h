@@ -28,6 +28,7 @@ public:
     bool setSubject(std::string subject);
     bool setMessageContent(std::string messageContent);
     void setMessageHead(SendOption messageHead);
+    bool setMessageHead(std::string messageHead);
 
     /* GETTER */
     int getMessageNumber();
