@@ -216,15 +216,24 @@ void Client::setSEND()
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
         std::getline(std::cin, tmp);
     }
-
-    tmp = "";
-
     std::cout << "Nachricht: ";
-    std::getline(std::cin, tmp);
-    while (!msg.setMessageContent(tmp))
+
+    while (1)
     {
+        tmp = "";
+        std::string message = "";
+        while (getline(std::cin, tmp))
+        {
+            message.append(tmp + '\n');
+
+            if (message.substr(message.size() - 3) == "\n.\n")
+            {
+                break;
+            }
+        }
+        if (msg.setMessageContent(message))
+            break;
         std::cout << "Ungültige Eingabe, versuche es erneut: ";
-        std::getline(std::cin, tmp);
     }
 }
 
