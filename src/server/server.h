@@ -43,6 +43,7 @@ private:
     void sendAnswer(bool answer);
     void setMsgNr();
     void setUser();
+    void sendReadAnswer(Message *answere);
 
     void quitClient(std::string client);
 };

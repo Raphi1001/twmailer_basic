@@ -164,7 +164,7 @@ void Server::workWithMsgHead()
         Message *answere = database.getUserMessage(msg.getSender(), msg.getMessageNumber());
         if (answere)
         {
-            // answere;
+            sendReadAnswer(answere);
         }
         else
         {
@@ -232,4 +232,29 @@ void Server::setUser()
 {
     if(!msg.setSender(reciveClient()))
         std::cout << "Sender wurde nicht erfolgreich verarbeitet" << std::endl;
+}
+
+void Server::sendReadAnswer(Message *answere)
+{
+    int i, total, len, bytesleft;
+
+    for (auto &elem : msg.getMessageString())
+    {
+        total = 0;
+        len = (int)sizeof(msg.getMessageString()) + 1;
+        bytesleft = len;
+
+        while (total < len)
+        {
+            if ((i = send(clientConnect, elem.c_str(), sizeof(elem), 0)) == -1)
+            {
+                std::cout << "Fehler beim senden!" << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            total += i;
+            bytesleft -= i;
+        }
+        sleep(1);
+    }
+    i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
 }

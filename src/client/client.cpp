@@ -149,6 +149,7 @@ void Client::startOption(SendOption input)
         msg.createMsgString();
         sendServer();
         waitServerRespons();
+        waitReadAnswer();
         break;
 
     case DEL:
@@ -274,4 +275,29 @@ void Client::sendServer()
         sleep(1);
     }
     i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
+}
+
+void Client::waitReadAnswer()
+{
+    int rec;
+    std::string tmp;
+    do
+    {
+        if ((rec = recv(socket_fd, dataReceiving, sizeof(dataReceiving), 0)) == -1)
+        {
+            std::cout << "Es ist ein Fehler beim recive aufgetreten" << std::endl;
+            break;
+        }
+        else if (rec == 0)
+        {
+            std::cout << "Remote socket wurde geschlossen" << std::endl;
+            break;
+        }
+        else
+        {
+            tmp += dataReceiving;
+        }
+    } while (rec == 2048);
+
+    std::cout << tmp << std::endl;
 }
