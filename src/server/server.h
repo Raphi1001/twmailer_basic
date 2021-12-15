@@ -37,9 +37,12 @@ private:
     Database database;
 
     void print_usage();
-    void reciveClient();
+    std::string reciveClient();
     void workWithMsgHead();
+    void setMsgSEND();
     void sendAnswer(bool answer);
+    void setMsgNr();
+    void setUser();
 
     void quitClient(std::string client);
 };

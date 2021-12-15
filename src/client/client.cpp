@@ -171,7 +171,7 @@ void Client::waitServerRespons()
 {
     int i = 0;
 
-    std::cout << "Warte auf Server response" << std::endl;
+    std::cout << "Warte auf Server response: ";
 
     do
     {
@@ -271,6 +271,7 @@ void Client::sendServer()
             total += i;
             bytesleft -= i;
         }
+        sleep(1);
     }
     i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
 }
