@@ -95,7 +95,7 @@ void Server::listenToClient()
         while (clientConnect > 0)
         {
             msg.cleanMsg();
-            if(msg.setMessageHead(reciveClient()))
+            if (msg.setMessageHead(reciveClient()))
                 workWithMsgHead();
             else
                 sendAnswer(false);
@@ -164,7 +164,10 @@ void Server::workWithMsgHead()
         Message *answere = database.getUserMessage(msg.getSender(), msg.getMessageNumber());
         if (answere)
         {
-            sendReadAnswer(answere);
+            sendReadAnswer(answere->getSender());
+            sendReadAnswer(answere->getReceiver());
+            sendReadAnswer(answere->getSubject());
+            sendReadAnswer(answere->getMessageContent());
         }
         else
         {
@@ -192,8 +195,8 @@ void Server::workWithMsgHead()
 }
 
 void Server::sendAnswer(bool answer)
-{   
-    if(answer)
+{
+    if (answer)
         snprintf(dataSending, sizeof(dataSending), "OK\n");
     else
         snprintf(dataSending, sizeof(dataSending), "ERR\n");
@@ -203,26 +206,25 @@ void Server::sendAnswer(bool answer)
 
 void Server::setMsgSEND()
 {
-    if( 
-    msg.setSender(reciveClient()) && 
-    msg.setReceiver(reciveClient()) && 
-    msg.setSubject(reciveClient()) && 
-    msg.setMessageContent(reciveClient()) && 
-    reciveClient() == "."
-    )
+    if (
+        msg.setSender(reciveClient()) &&
+        msg.setReceiver(reciveClient()) &&
+        msg.setSubject(reciveClient()) &&
+        msg.setMessageContent(reciveClient()) &&
+        reciveClient() == ".")
         std::cout << "Msg wurde erfolgreich verarbeitet" << std::endl;
     else
-        std::cout << "Msg wurde nicht erfolgreich verarbeitet" << std::endl ;
+        std::cout << "Msg wurde nicht erfolgreich verarbeitet" << std::endl;
 }
 
 void Server::setMsgNr()
 {
     try
     {
-        if(!msg.setMessageNumber(stoi(reciveClient())))
+        if (!msg.setMessageNumber(stoi(reciveClient())))
             std::cout << "MsgNr wurde nicht erfolgreich verarbeitet" << std::endl;
     }
-    catch(...)
+    catch (...)
     {
         std::cout << "Msg wurde nicht erfolgreich verarbeitet" << std::endl;
     }
@@ -230,31 +232,20 @@ void Server::setMsgNr()
 
 void Server::setUser()
 {
-    if(!msg.setSender(reciveClient()))
+    if (!msg.setSender(reciveClient()))
         std::cout << "Sender wurde nicht erfolgreich verarbeitet" << std::endl;
 }
 
-void Server::sendReadAnswer(Message *answere)
+void Server::sendReadAnswer(std::string str)
 {
-    int i, total, len, bytesleft;
+    int i;
+    std::cout << str << std::endl;
 
-    for (auto &elem : msg.getMessageString())
+    if ((i = send(clientConnect, str.c_str(), sizeof(str), 0)) == -1)
     {
-        total = 0;
-        len = (int)sizeof(msg.getMessageString()) + 1;
-        bytesleft = len;
-
-        while (total < len)
-        {
-            if ((i = send(clientConnect, elem.c_str(), sizeof(elem), 0)) == -1)
-            {
-                std::cout << "Fehler beim senden!" << std::endl;
-                exit(EXIT_FAILURE);
-            }
-            total += i;
-            bytesleft -= i;
-        }
-        sleep(1);
+        std::cout << "Fehler beim senden!" << std::endl;
+        exit(EXIT_FAILURE);
     }
+    sleep(1);
     i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
 }

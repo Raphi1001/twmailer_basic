@@ -289,7 +289,7 @@ void Client::sendServer()
 void Client::waitReadAnswer()
 {
     int rec;
-    std::string tmp;
+    std::string tmp = "";
     do
     {
         if ((rec = recv(socket_fd, dataReceiving, sizeof(dataReceiving), 0)) == -1)
