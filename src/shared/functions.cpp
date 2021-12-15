@@ -39,3 +39,10 @@ bool isDigitLetterSpaceOnly(string str)
     }
     return true;
 }
+
+string getCurrentTime()
+{
+    auto timeStamp = chrono::system_clock::now();
+    time_t currentTime = chrono::system_clock::to_time_t(timeStamp);
+    return to_string(currentTime);
+}

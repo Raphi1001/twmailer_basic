@@ -2,30 +2,43 @@
 
 using namespace std;
 
-void User::setUsername(std::string username)
+bool User::setUsername(std::string username)
 {
     if (!checkMaxSize(username, 8) || !isDigitLetterOnly(username))
-        exitFailure("Ungültiger Username: " + username);
+        return false;
+
     this->username = username;
+    return true;
 }
 
-void User::addMessage(Message msg, string pathToMsg)
+bool User::addMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent, string pathToMsg)
 {
-    receivedMessages.push_back(msg);
-    fileCount++;
+    Message newMessage;
+    if (!newMessage.setSender(sender))
+        return false;
 
-    ofstream newMsg(pathToMsg);
-    newMsg << msg.getSender() << endl
-           << msg.getReceiver() << endl
-           << msg.getSubject() << endl
-           << msg.getMessageContent() << endl;
+    if (!newMessage.setReceiver(receiver))
+        return false;
 
-    newMsg.close();
-}
+    if (!newMessage.setSubject(subject))
+        return false;
 
-vector<Message> User::getMessages()
-{
-    return receivedMessages;
+    if (!newMessage.setMessageContent(messageContent))
+        return false;
+
+    receivedMessages.push_back(newMessage);
+
+    ofstream newMsgFile(pathToMsg); /* TAKE A LOOK BITXh*/
+    if (!newMsgFile.is_open())
+        return false;
+
+    newMsgFile << sender << endl
+               << receiver << endl
+               << subject << endl
+               << messageContent << endl;
+
+    newMsgFile.close();
+    return true;
 }
 
 string User::getUsername()
@@ -33,25 +46,101 @@ string User::getUsername()
     return username;
 }
 
-void User::loadUser(string username, string userDirectory)
+vector<Message> User::getAllMessages()
 {
-    setUsername(username);
+    return receivedMessages;
+}
 
+Message *User::getMessage(int msgNumber)
+{
+    if (msgNumber < (int)receivedMessages.size())
+    {
+        return &receivedMessages[msgNumber];
+    }
+
+    return nullptr;
+}
+
+void User::loadMessage(string filepath)
+{
+    Message newMessage;
+    ifstream input_file(filepath);
+
+    if (!input_file.is_open())
+        exitFailure("Ungültige Datenbank. File konnte nicht geöffnet werden: " + filepath);
+
+    string currentLine;
+
+    if (!getline(input_file, currentLine).good())
+        exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
+    if (!newMessage.setSender(currentLine))
+        exitFailure("Ungültige Datenbank. Ungültiger Sender: " + currentLine + ", File: " + filepath);
+
+    if (!getline(input_file, currentLine).good())
+        exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
+    if (!newMessage.setReceiver(currentLine))
+        exitFailure("Ungültige Datenbank. Ungültiger Empfänger: " + currentLine + ", File: " + filepath);
+
+    if (!getline(input_file, currentLine).good())
+        exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
+    if (!newMessage.setSubject(currentLine))
+        exitFailure("Ungültige Datenbank. Ungültiger Betreff: " + currentLine + ", File: " + filepath);
+
+    if (!getline(input_file, currentLine).good())
+        exitFailure("Ungültige Datenbank. Filestruktur nicht korrekt: " + filepath);
+    if (!newMessage.setMessageContent(currentLine))
+        exitFailure("Ungültige Datenbank. Ungültige Nachricht: " + currentLine + ", File: " + filepath);
+
+    input_file.close();
+
+    receivedMessages.push_back(newMessage);
+}
+
+bool User::deleteMessage(int msgNumber, std::string userDirectory)
+{
+    // remove from vector
+    if (!deleteMessageVector(msgNumber) || !deleteMessageFiles(msgNumber, userDirectory))
+        return false;
+
+    return true;
+}
+
+bool User::deleteMessageVector(int msgNumber)
+{
+    if (msgNumber < (int)receivedMessages.size())
+    {
+        receivedMessages.erase(receivedMessages.begin() + msgNumber);
+        return true;
+    }
+    return false;
+}
+
+bool User::deleteMessageFiles(int msgNumber, std::string userDirectory)
+{
+    int currentMsgNumber = 0;
     struct dirent *direntp;
     DIR *dirp = opendir(userDirectory.c_str());
-    if (!dirp)
-        exitFailure("Directory konnte nicht geöffnet werden: " + userDirectory);
 
-    while ((direntp = readdir(dirp)) != NULL)
+    if (!dirp)
+        return false;
+
+    while ((direntp = readdir(dirp)) != NULL && currentMsgNumber <= msgNumber)
     {
         if (strcmp(direntp->d_name, ".") != 0 && strcmp(direntp->d_name, "..") != 0) //"." und ".." Verzeichnisse überspringen
         {
-            string filepath(userDirectory + "/" + direntp->d_name);
-            Message newMsg;
-            newMsg.loadMessage(filepath, fileCount);
-            receivedMessages.push_back(newMsg);
-            fileCount++;
+            if (msgNumber == currentMsgNumber)
+            {
+                string filepath(userDirectory + "/" + direntp->d_name);
+                if (remove(filepath.c_str()) == 0)
+                {
+                    closedir(dirp);
+                    return true;
+                }
+                break;
+            }
+            ++currentMsgNumber;
         }
     }
+    return false;
     closedir(dirp);
 }

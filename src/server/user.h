@@ -16,18 +16,23 @@ class User
 private:
     std::string username;
     std::vector<Message> receivedMessages;
-    int fileCount = 0;
 
 public:
     /* SETTER */
-    void setUsername(std::string username);
-    void addMessage(Message msg, std::string pathToMsg);
+    bool setUsername(std::string username);
+    bool addMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent, std::string pathToMsg);
+    void increaseFileCount();
 
     /* GETTER */
-    std::vector<Message> getMessages();
     std::string getUsername();
+    int getFileCount();
+    std::vector<Message> getAllMessages();
+    Message *getMessage(int msgNumber);
 
     /* FUNC */
-    void loadUser(std::string username, std::string userDirectory);
+    void loadMessage(std::string filepath);
+    bool deleteMessage(int msgNumber, std::string userDirectory);
+    bool deleteMessageVector(int msgNumber);
+    bool deleteMessageFiles(int msgNumber, std::string userDirectory);
 };
 #endif

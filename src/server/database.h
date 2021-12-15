@@ -22,28 +22,31 @@ private:
     std::string dir;
     std::vector<User> users;
 
+    bool addMessageToUser(User *user, std::string sender, std::string receiver, std::string subject, std::string messageContent);
+    User *sendMessageToExistingUser(std::string username);
+
 public:
     /* SETTER */
 
     void setDir(std::string dirName);
     void addUser(User user);
+    bool addNewUser(User *newUser, std::string username);
 
     /* GETTER */
 
-    std::vector<User> getUsers();
+    std::vector<User> getAllUsers();
+    User *getUser(std::string username);
+    Message *getUserMessage(std::string username, int msgNumber);
 
     /* FUNC */
 
     bool dirExists();
     bool dirIsEmpty();
     void loadDatabase();
+    void loadUser(std::string username);
+    bool sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
+    bool deleteUserMessage(std::string username, int msgNumber);
 
-    void sendMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
-    User listUserMessages();
-    Message readMessage();
-    bool deleteMessage(std::string username, int msgNumber);
-
-    void createUser(std::string username);
-    Message createMessage(std::string sender, std::string receiver, std::string subject, std::string messageContent);
+    void printAllUsers();
 };
 #endif

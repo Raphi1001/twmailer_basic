@@ -3,10 +3,14 @@
 
 #include <string>
 #include <iostream>
+#include <chrono>
+#include <ctime>
 
 void exitFailure(std::string errorMsg);
 bool checkMaxSize(std::string word, int max);
 bool isDigitLetterOnly(std::string word);
 bool isDigitLetterSpaceOnly(std::string word);
+
+std::string getCurrentTime();
 
 #endif

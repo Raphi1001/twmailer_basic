@@ -11,9 +11,34 @@ int main(int argc, char *argv[])
     Database testDatabase;
 
     testDatabase.setDir("moin");
-    testDatabase.sendMessage("meinem", "popo", "lasswaserleben", "heeyyyy");
-    std::cout << testDatabase.getUsers().back().getMessages().back().getSubject() << std::endl;
-    // std::cout << testDatabase.getUsers()[0].getMessages()[0].getSubject() << std::endl;
+    ////DELETE////
+    /*if (testDatabase.deleteUserMessage("popo", 2))
+        std::cout << "gelöscht" << std::endl;
+         else
+        std::cout << "gelöscht" << std::endl;
+    */
+
+    /// SEND
+    /*
+        if (testDatabase.sendMessage("harry", "po", "Geburtstagspartyyyy", "Ichliebediir"))
+            std::cout << "ok" << std::endl;
+        else
+            std::cout << "nicht ok" << std::endl;
+    */
+    //// READ
+    /*
+    Message *testMessage = testDatabase.getUserMessage("popo", 3);
+    if (testMessage)
+        std::cout << testMessage->getSubject() << std::endl;
+    else
+        std::cout << "Fehler" << std::endl;
+    */
+
+    //// LIST
+    /*
+    testDatabase.getUser("popo");
+    */
+    testDatabase.printAllUsers();
 
     server.listenToClient();
 }
