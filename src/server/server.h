@@ -44,6 +44,7 @@ private:
     void setMsgNr();
     void setUser();
     void sendReadAnswer(std::string str);
+    void sendSendAnswer(std::string str);
 
     void quitClient(std::string client);
 };

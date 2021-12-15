@@ -154,8 +154,26 @@ void Server::workWithMsgHead()
     else if (msg.getMessageHead() == "LIST")
     {
         setUser();
-        database.getUser(msg.getSender())->getAllMessages();
-        sendAnswer(true);
+        User *user = database.getUser(msg.getSender());
+        if (user)
+        {
+
+            snprintf(dataSending, sizeof(dataSending), "OK\n");
+
+            write(clientConnect, dataSending, strlen(dataSending));
+
+            std::vector<Message> messages = user->getAllMessages();
+
+            sendSendAnswer(std::to_string(messages.size()));
+            for (int i = 0; i < (int)messages.size(); ++i)
+            {
+                sendSendAnswer(messages[i].getSubject());
+            }
+        }
+        else
+        {
+            sendSendAnswer("0");
+        }
     }
     else if (msg.getMessageHead() == "READ")
     {
@@ -237,6 +255,20 @@ void Server::setUser()
 }
 
 void Server::sendReadAnswer(std::string str)
+{
+    int i;
+    std::cout << str << std::endl;
+
+    if ((i = send(clientConnect, str.c_str(), sizeof(str), 0)) == -1)
+    {
+        std::cout << "Fehler beim senden!" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    sleep(1);
+    i == -1 ? std::cout << "Senden war nicht erfolgreich!" << std::endl : std::cout << "Senden war erfolgreich!" << std::endl;
+}
+
+void Server::sendSendAnswer(std::string str)
 {
     int i;
     std::cout << str << std::endl;
